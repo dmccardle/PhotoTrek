@@ -1,4 +1,12 @@
 <resources>
     <string name="app_name">PhotoTrek</string>
     <string name="title_activity_maps">Map</string>
+    <string name="title_activity_main">MainActivity</string>
+    <string name="title_activity_album">AlbumActivity</string>
+    <string name="text_album_name_placeholder">TextView</string>
+    <string name="icon_text_map">Map View</string>
+    <string name="btn_save">Save</string>
+    <string name="btn_cancel">Cancel</string>
+    <string name="text_description">Description</string>
+    <string name="text_album_title">Album Title</string>
 </resources>
