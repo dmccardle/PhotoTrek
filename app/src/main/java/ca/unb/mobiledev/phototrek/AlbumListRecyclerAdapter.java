@@ -3,6 +3,7 @@ package ca.unb.mobiledev.phototrek;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.media.ThumbnailUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +14,7 @@ import com.google.android.material.snackbar.Snackbar;
 
 import java.util.List;
 
+import androidx.core.widget.ImageViewCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 public class AlbumListRecyclerAdapter extends RecyclerView.Adapter<AlbumListRecyclerAdapter.ViewHolder> {
@@ -43,11 +45,13 @@ public class AlbumListRecyclerAdapter extends RecyclerView.Adapter<AlbumListRecy
             holder.mCoverPhoto.setImageResource(R.drawable.ic_empty_album);
         } else {
             String photoPath = album.getPhotos().get(coverImagePosition).getAbsolutePath();
-            Bitmap thumbnail = BitmapUtils.decodeSampledBitmapFromResource(photoPath, 128, 128);
+            Bitmap thumbnail = BitmapUtils.decodeSampledBitmapFromResource(photoPath, 256, 256);
             if (thumbnail == null) {
                 holder.mCoverPhoto.setImageResource(R.drawable.ic_empty_album);
             } else {
-                holder.mCoverPhoto.setImageBitmap(thumbnail);
+                Bitmap resized = ThumbnailUtils.extractThumbnail(thumbnail, 256, 256);
+                ImageViewCompat.setImageTintList( holder.mCoverPhoto, null);
+                holder.mCoverPhoto.setImageBitmap(resized);
             }
         }
 

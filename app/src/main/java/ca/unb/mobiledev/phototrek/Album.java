@@ -3,8 +3,8 @@ package ca.unb.mobiledev.phototrek;
 import java.util.List;
 
 public class Album {
-    private final String mTitle;
-    private final int mCoverImagePosition;
+    private String mTitle;
+    private int mCoverImagePosition;
     private final List<Photo> mPhotos;
 
     public Album(String title, List<Photo> photos) {
@@ -15,7 +15,11 @@ public class Album {
 
     public String getTitle() { return mTitle; }
 
+    public void setTitle(String title) { mTitle = title; }
+
     public int getCoverImagePosition() { return mCoverImagePosition; }
+
+    public void setCoverImagePosition(int position) { mCoverImagePosition = position; }
 
     public List<Photo> getPhotos() { return mPhotos; }
 
