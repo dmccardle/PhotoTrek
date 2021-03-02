@@ -3,21 +3,23 @@ package ca.unb.mobiledev.phototrek;
 import android.location.Location;
 import android.net.Uri;
 
+import com.google.android.gms.maps.model.LatLng;
+
 public class Photo {
     private final String mAbsolutePath;
-    private String mCoordinates;
+    private LatLng mCoordinates;
     //private final Location mCoordinates;
     private String mDescription;
     private final String mDate;
 
-    public Photo(String coordinates, String description, String date) {
+    public Photo(LatLng coordinates, String description, String date) {
         mAbsolutePath = null;
         mCoordinates = coordinates;
         mDescription = description;
         mDate = date;
     }
 
-    public Photo(String absolutePath, String coordinates, String description, String date) {
+    public Photo(String absolutePath, LatLng coordinates, String description, String date) {
         mAbsolutePath = absolutePath;
         mCoordinates = coordinates;
         mDescription = description;
@@ -26,7 +28,7 @@ public class Photo {
 
     public String getAbsolutePath() { return mAbsolutePath; }
 
-    public String getCoordinates() {
+    public LatLng getCoordinates() {
         return mCoordinates;
     }
 
@@ -40,7 +42,7 @@ public class Photo {
         return mDate;
     }
 
-    public void setCoordinates(String coordinates){
+    public void setCoordinates(LatLng coordinates){
         mCoordinates = coordinates;
     }
 }

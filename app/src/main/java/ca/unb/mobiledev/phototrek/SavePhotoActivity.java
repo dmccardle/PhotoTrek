@@ -25,6 +25,7 @@ import android.widget.Spinner;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 
@@ -88,7 +89,7 @@ public class SavePhotoActivity extends AppCompatActivity {
     }
 
     private Photo savePhoto(){
-        String coordinates = "";
+        LatLng coordinates = new LatLng(0.0,0.0);
         String description = mTextDescription.getText().toString();
         String date = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
         Photo photo = new Photo(mPhotoPath, coordinates, description, date);

@@ -14,6 +14,7 @@ import androidx.core.app.ActivityCompat;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 
@@ -77,7 +78,8 @@ public class LocationFinder {
                             );
                             longitude = location.getLongitude();
                             latitude = location.getLatitude();
-                            photo.setCoordinates(latitude + ", " + longitude);
+                            LatLng latlong = new LatLng(latitude, longitude);
+                            photo.setCoordinates(latlong);
                         } catch (IOException e){
                             e.printStackTrace();
                         }

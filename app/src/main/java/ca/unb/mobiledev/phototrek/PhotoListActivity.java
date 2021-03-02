@@ -92,9 +92,9 @@ public class PhotoListActivity extends AppCompatActivity {
 
                 List<Photo> photos = mAlbum.getPhotos();
                 for(Photo photo : photos) {
-                    LatLng fredericton = new LatLng(45.9636, -66.6431);
-                    mMap.addMarker(new MarkerOptions().position(fredericton).title("Marker in Freddy Beach"));
-                    mMap.moveCamera(CameraUpdateFactory.newLatLng(fredericton));
+                    LatLng marker = photo.getCoordinates();
+                    mMap.addMarker(new MarkerOptions().position(marker).title("Marker in Freddy Beach"));
+                    mMap.moveCamera(CameraUpdateFactory.newLatLng(marker));
                 }
             }
         });

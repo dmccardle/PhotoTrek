@@ -1,5 +1,7 @@
 package ca.unb.mobiledev.phototrek;
 
+import com.google.android.gms.maps.model.LatLng;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,9 +30,10 @@ public class DataManager {
 
     public Album createAlbum(String title) {
         List<Photo> photos = new ArrayList<>();
-        photos.add(new Photo("lat, long", "description", "10/10/21"));
-        photos.add(new Photo("lat, long", "description2", "11/10/21"));
-        photos.add(new Photo("lat, long", "description3", "12/10/21"));
+        LatLng latlong = new LatLng(10,10);
+        photos.add(new Photo(latlong, "description", "10/10/21"));
+        photos.add(new Photo(latlong, "description2", "11/10/21"));
+        photos.add(new Photo(latlong, "description3", "12/10/21"));
         return new Album(title, photos);
     }
 
