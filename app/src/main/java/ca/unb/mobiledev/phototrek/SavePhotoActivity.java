@@ -95,6 +95,7 @@ public class SavePhotoActivity extends AppCompatActivity {
 
         Album album = DataManager.getInstance().getAlbums().get(mSpinnerAlbums.getSelectedItemPosition());
         album.getPhotos().add(photo);
+        album.setCoverImagePosition(album.getPhotos().size() - 1);
         finish();
         return photo;
     }

@@ -7,7 +7,7 @@ public class Photo {
     private final String mAbsolutePath;
     private String mCoordinates;
     //private final Location mCoordinates;
-    private final String mDescription;
+    private String mDescription;
     private final String mDate;
 
     public Photo(String coordinates, String description, String date) {
@@ -33,6 +33,8 @@ public class Photo {
     public String getDescription() {
         return mDescription;
     }
+
+    public void setDescription(String description) { mDescription = description; }
 
     public String getDate() {
         return mDate;
