@@ -1,9 +1,19 @@
 package ca.unb.mobiledev.phototrek;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 
+import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.location.Address;
+import android.location.Geocoder;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -13,9 +23,16 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
 
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 public class SavePhotoActivity extends AppCompatActivity {
     public static final String PHOTO_PATH = "ca.unb.mobiledev.phototrek.PHOTO_PATH";
@@ -25,6 +42,8 @@ public class SavePhotoActivity extends AppCompatActivity {
     private Button mSaveButton;
     private Button mCancelButton;
     private String mPhotoPath;
+    private LocationFinder locationFinder;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,14 +64,8 @@ public class SavePhotoActivity extends AppCompatActivity {
         mSaveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String coordinates = "10, 10";
-                String description = mTextDescription.getText().toString();
-                String date = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-                Photo photo = new Photo(mPhotoPath, coordinates, description, date);
-
-                Album album = DataManager.getInstance().getAlbums().get(mSpinnerAlbums.getSelectedItemPosition());
-                album.getPhotos().add(photo);
-                finish();
+                Photo photo = savePhoto();
+                getLocation(photo);
             }
         });
         mCancelButton = (Button) findViewById(R.id.btn_cancel);
@@ -73,4 +86,22 @@ public class SavePhotoActivity extends AppCompatActivity {
     protected void onPause() {
         super.onPause();
     }
+
+    private Photo savePhoto(){
+        String coordinates = "";
+        String description = mTextDescription.getText().toString();
+        String date = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        Photo photo = new Photo(mPhotoPath, coordinates, description, date);
+
+        Album album = DataManager.getInstance().getAlbums().get(mSpinnerAlbums.getSelectedItemPosition());
+        album.getPhotos().add(photo);
+        finish();
+        return photo;
+    }
+
+    private void getLocation(Photo photo){
+        locationFinder = new LocationFinder(this, this);
+        locationFinder.setPhotoLocation(photo);
+    }
+
 }

@@ -26,11 +26,15 @@ public class DataManager {
         mAlbums.add(createAlbum("PoI's"));
     }
 
-    private Album createAlbum(String title) {
+    public Album createAlbum(String title) {
         List<Photo> photos = new ArrayList<>();
         photos.add(new Photo("lat, long", "description", "10/10/21"));
         photos.add(new Photo("lat, long", "description2", "11/10/21"));
         photos.add(new Photo("lat, long", "description3", "12/10/21"));
         return new Album(title, photos);
+    }
+
+    public void addAlbum(Album album){
+        mAlbums.add(album);
     }
 }

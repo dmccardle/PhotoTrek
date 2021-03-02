@@ -1,10 +1,12 @@
 package ca.unb.mobiledev.phototrek;
 
+import android.location.Location;
 import android.net.Uri;
 
 public class Photo {
     private final String mAbsolutePath;
-    private final String mCoordinates;
+    private String mCoordinates;
+    //private final Location mCoordinates;
     private final String mDescription;
     private final String mDate;
 
@@ -34,5 +36,9 @@ public class Photo {
 
     public String getDate() {
         return mDate;
+    }
+
+    public void setCoordinates(String coordinates){
+        mCoordinates = coordinates;
     }
 }

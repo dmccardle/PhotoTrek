@@ -54,7 +54,6 @@ public class MapActivity extends AppCompatActivity {
             }
         });
         initializeMap();
-
     }
 
     // Uses the res/menu/menu_maps.xml resource to populate the actions.
