@@ -50,7 +50,7 @@ public class PhotoListActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         mAlbumPosition = intent.getIntExtra(ALBUM_POSITION, -1);
-        mAlbum = DataManager.getInstance().getAlbums().get(mAlbumPosition);
+        mAlbum = OldDataManager.getInstance().getAlbums().get(mAlbumPosition);
 
         initializeMap();
         displayPhotos();

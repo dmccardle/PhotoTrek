@@ -1,11 +1,20 @@
 package ca.unb.mobiledev.phototrek;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Album {
+
+    private int id;
     private String mTitle;
     private int mCoverImagePosition;
     private final List<Photo> mPhotos;
+
+    public Album(String mTitle) {
+        this.mTitle = mTitle;
+        this.mCoverImagePosition = 0;
+        this.mPhotos = new ArrayList<Photo>();
+    }
 
     public Album(String title, List<Photo> photos) {
         mTitle = title;
@@ -26,5 +35,13 @@ public class Album {
     @Override
     public String toString() {
         return mTitle;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 }

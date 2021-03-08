@@ -77,7 +77,7 @@ public class MapActivity extends AppCompatActivity {
             public void onMapReady(GoogleMap googleMap) {
                 mMap = googleMap;
 
-                List<Album> albums = DataManager.getInstance().getAlbums();
+                List<Album> albums = OldDataManager.getInstance().getAlbums();
                 for(Album album : albums) {
                     List<Photo> photos = album.getPhotos();
                     for(Photo photo : photos) {

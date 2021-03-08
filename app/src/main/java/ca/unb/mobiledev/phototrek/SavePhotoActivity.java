@@ -1,21 +1,10 @@
 package ca.unb.mobiledev.phototrek;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
 
-import android.Manifest;
-import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
-import android.location.Address;
-import android.location.Geocoder;
-import android.location.Location;
-import android.location.LocationListener;
-import android.location.LocationManager;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -29,21 +18,16 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 
-import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 
 public class SavePhotoActivity extends AppCompatActivity {
     public static final String PHOTO_PATH = "ca.unb.mobiledev.phototrek.PHOTO_PATH";
     private Spinner mSpinnerAlbums;
     private EditText mTextDescription;
-    private ImageView mPhotoPreview;
-    private Button mSaveButton;
-    private Button mCancelButton;
     private String mPhotoPath;
-    private LocationFinder locationFinder;
+    private DataManager dataManager;
 
 
     @Override
@@ -51,17 +35,19 @@ public class SavePhotoActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_save_photo);
 
+        dataManager = new DataManager(this);
+
         mSpinnerAlbums = (Spinner) findViewById(R.id.spinner_albums);
-        List<Album> albums = DataManager.getInstance().getAlbums();
+        List<Album> albums = OldDataManager.getInstance().getAlbums();
         ArrayAdapter<Album> adapterAlbums =
                 new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, albums);
         adapterAlbums.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         mSpinnerAlbums.setAdapter(adapterAlbums);
 
         mTextDescription = (EditText) findViewById(R.id.textbox_description);
-        mPhotoPreview = (ImageView) findViewById(R.id.photo_preview);
+        ImageView mPhotoPreview = (ImageView) findViewById(R.id.photo_preview);
 
-        mSaveButton = (Button) findViewById(R.id.btn_save);
+        Button mSaveButton = (Button) findViewById(R.id.btn_save);
         mSaveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -69,7 +55,7 @@ public class SavePhotoActivity extends AppCompatActivity {
                 getLocation(photo);
             }
         });
-        mCancelButton = (Button) findViewById(R.id.btn_cancel);
+        Button mCancelButton = (Button) findViewById(R.id.btn_cancel);
         mCancelButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -94,7 +80,7 @@ public class SavePhotoActivity extends AppCompatActivity {
         String date = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
         Photo photo = new Photo(mPhotoPath, coordinates, description, date);
 
-        Album album = DataManager.getInstance().getAlbums().get(mSpinnerAlbums.getSelectedItemPosition());
+        Album album = OldDataManager.getInstance().getAlbums().get(mSpinnerAlbums.getSelectedItemPosition());
         album.getPhotos().add(photo);
         album.setCoverImagePosition(album.getPhotos().size() - 1);
         finish();
@@ -102,7 +88,7 @@ public class SavePhotoActivity extends AppCompatActivity {
     }
 
     private void getLocation(Photo photo){
-        locationFinder = new LocationFinder(this, this);
+        LocationFinder locationFinder = new LocationFinder(this, this);
         locationFinder.setPhotoLocation(photo);
     }
 

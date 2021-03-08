@@ -1,43 +1,49 @@
 package ca.unb.mobiledev.phototrek;
 
-import com.google.android.gms.maps.model.LatLng;
+import android.content.ContentValues;
+import android.content.Context;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteOpenHelper;
 
-import java.util.ArrayList;
-import java.util.List;
+import androidx.annotation.Nullable;
 
-public class DataManager {
-    private static DataManager singleInstance = null;
+public class DataManager extends SQLiteOpenHelper {
 
-    private List<Album> mAlbums = new ArrayList<>();
+    public static final String ALBUMS_TABLE = "ALBUMS";
+    public static final String ALBUM_TITLE_COLUMN = "ALBUM_TITLE";
 
-    public static DataManager getInstance() {
-        if(singleInstance == null) {
-            singleInstance = new DataManager();
-            singleInstance.initializeAlbums();
-        }
-        return singleInstance;
+
+    public DataManager(@Nullable Context context) {
+        super(context, "database.db", null, 1);
     }
 
-    public List<Album> getAlbums() {
-        return mAlbums;
+    @Override
+    public void onCreate(SQLiteDatabase sqLiteDatabase) {
+        String createAlbumTableStatement = "CREATE TABLE " + ALBUMS_TABLE + " (" +
+                "ID INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                "" + ALBUM_TITLE_COLUMN + " TEXT" +
+                ")";
+
+        // TODO: set up photos tables
+        //String createPhotoTableStatement = "";
+
+        sqLiteDatabase.execSQL(createAlbumTableStatement);
+        //sqLiteDatabase.execSQL(createPhotoTableStatement);
     }
 
-    // Mock data
-    private void initializeAlbums() {
-        mAlbums.add(createAlbum("Waterfall"));
-        mAlbums.add(createAlbum("PoI's"));
+    @Override
+    public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {
+        // called when a new database version is added
     }
 
-    public Album createAlbum(String title) {
-        List<Photo> photos = new ArrayList<>();
-        LatLng latlong = new LatLng(10,10);
-        photos.add(new Photo(latlong, "description", "10/10/21"));
-        photos.add(new Photo(latlong, "description2", "11/10/21"));
-        photos.add(new Photo(latlong, "description3", "12/10/21"));
-        return new Album(title, photos);
-    }
+    public boolean addAlbum(Album album) {
+        // TODO: call this when adding an album
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
 
-    public void addAlbum(Album album){
-        mAlbums.add(album);
+        contentValues.put(ALBUM_TITLE_COLUMN, album.getTitle());
+        long result = db.insert(ALBUMS_TABLE, null, contentValues);
+
+        return result != -1;
     }
 }
