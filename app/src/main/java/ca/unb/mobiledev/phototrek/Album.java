@@ -16,11 +16,19 @@ public class Album {
         this.mPhotos = new ArrayList<Photo>();
     }
 
+    public Album(int id, String mTitle) {
+        this.id = id;
+        this.mTitle = mTitle;
+        this.mCoverImagePosition = 0;
+        this.mPhotos = new ArrayList<Photo>();
+    }
+
     public Album(String title, List<Photo> photos) {
         mTitle = title;
         mPhotos = photos;
         mCoverImagePosition = photos.size() - 1;
     }
+
 
     public String getTitle() { return mTitle; }
 
