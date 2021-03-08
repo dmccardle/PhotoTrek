@@ -16,11 +16,11 @@ public class Album {
         this.mPhotos = new ArrayList<Photo>();
     }
 
-    public Album(int id, String mTitle) {
+    public Album(int id, String mTitle, List<Photo> photos) {
         this.id = id;
         this.mTitle = mTitle;
         this.mCoverImagePosition = 0;
-        this.mPhotos = new ArrayList<Photo>();
+        this.mPhotos = photos;
     }
 
     public Album(String title, List<Photo> photos) {
@@ -29,16 +29,25 @@ public class Album {
         mCoverImagePosition = photos.size() - 1;
     }
 
+    public String getTitle() {
+        return mTitle;
+    }
 
-    public String getTitle() { return mTitle; }
+    public void setTitle(String title) {
+        mTitle = title;
+    }
 
-    public void setTitle(String title) { mTitle = title; }
+    public int getCoverImagePosition() {
+        return mCoverImagePosition;
+    }
 
-    public int getCoverImagePosition() { return mCoverImagePosition; }
+    public void setCoverImagePosition(int position) {
+        mCoverImagePosition = position;
+    }
 
-    public void setCoverImagePosition(int position) { mCoverImagePosition = position; }
-
-    public List<Photo> getPhotos() { return mPhotos; }
+    public List<Photo> getPhotos() {
+        return mPhotos;
+    }
 
     @Override
     public String toString() {
@@ -52,4 +61,5 @@ public class Album {
     public void setId(int id) {
         this.id = id;
     }
+
 }

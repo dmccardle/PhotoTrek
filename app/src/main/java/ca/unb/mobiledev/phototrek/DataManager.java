@@ -9,6 +9,8 @@ import android.provider.BaseColumns;
 
 import androidx.annotation.Nullable;
 
+import com.google.android.gms.maps.model.LatLng;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,6 +23,7 @@ public class DataManager extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         db.execSQL(AlbumSchema.SQL_CREATE_ALBUM_TABLE);
+        db.execSQL(PhotoSchema.SQL_CREATE_PHOTO_TABLE);
     }
 
     @Override
@@ -38,6 +41,24 @@ public class DataManager extends SQLiteOpenHelper {
         return result != -1;
     }
 
+    public Album getAlbumById(int albumId) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        String selection = AlbumSchema._ID + " = " + albumId;
+
+        Cursor cursor = db.query(
+                AlbumSchema.ALBUM_TABLE,
+                null,
+                selection,
+                null,
+                null,
+                null,
+                null
+        );
+
+        List<Album> albums = getAlbumsFromCursor(cursor);
+        return albums.get(0);
+    }
+
     public List<Album> getAllAlbums() {
         SQLiteDatabase db = this.getReadableDatabase();
 
@@ -51,7 +72,8 @@ public class DataManager extends SQLiteOpenHelper {
                 null
         );
 
-        return getAlbumsFromCursor(cursor);
+        List<Album> albums = getAlbumsFromCursor(cursor);
+        return albums;
     }
 
     private List<Album> getAlbumsFromCursor(Cursor cursor) {
@@ -59,7 +81,8 @@ public class DataManager extends SQLiteOpenHelper {
         while (cursor.moveToNext()) {
             int albumId = cursor.getInt(0);
             String albumTitle = cursor.getString(1);
-            albums.add(new Album(albumId, albumTitle));
+            List<Photo> albumPhotos = getPhotosForAlbum(albumId);
+            albums.add(new Album(albumId, albumTitle, albumPhotos));
         }
         return albums;
     }
@@ -82,6 +105,43 @@ public class DataManager extends SQLiteOpenHelper {
         return count == 1;
     }
 
+    private List<Photo> getPhotosForAlbum(int albumId) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        return null;
+    }
+
+    public List<Photo> getAllPhotos() {
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.query(
+                PhotoSchema.PHOTO_TABLE,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null
+        );
+
+        return getPhotosFromCursor(cursor);
+    }
+
+    private List<Photo> getPhotosFromCursor(Cursor cursor) {
+        List<Photo> photos = new ArrayList<>();
+        while (cursor.moveToNext()) {
+            int photoId = cursor.getInt(0);
+            String photoPath = cursor.getString(1);
+            double photoLat = cursor.getDouble(2);
+            double photoLng = cursor.getDouble(3);
+            LatLng photoLatLng = new LatLng(photoLat, photoLng);
+            String photoDescription = cursor.getString(4);
+            String photoDate = cursor.getString(5);
+            int photoAlbum = cursor.getInt(6);
+
+            photos.add(new Photo(photoPath, photoLatLng, photoDescription, photoDate, photoAlbum));
+        }
+        return photos;
+    }
+
     public static class AlbumSchema implements BaseColumns {
         public static final String ALBUM_TABLE = "ALBUMS";
         public static final String ALBUM_TITLE_COLUMN = "ALBUM_TITLE";
@@ -93,6 +153,30 @@ public class DataManager extends SQLiteOpenHelper {
 
         public static final String SQL_DELETE_ALBUM_TABLE =
                 "DROP TABLE IF EXISTS " + AlbumSchema.ALBUM_TABLE;
+    }
+
+    public static class PhotoSchema implements BaseColumns {
+        public static final String PHOTO_TABLE = "PHOTOS";
+        public static final String PHOTO_PATH_COLUMN = "PHOTO_PATH";
+        public static final String PHOTO_LAT_COLUMN = "PHOTO_LAT";
+        public static final String PHOTO_LNG_COLUMN = "PHOTO_LNG";
+        public static final String PHOTO_DESCRIPTION_COLUMN = "PHOTO_DESCRIPTION";
+        public static final String PHOTO_DATE_COLUMN = "PHOTO_DATE";
+        public static final String PHOTO_ALBUM_COLUMN = "PHOTO_ALBUM";
+
+        public static final String SQL_CREATE_PHOTO_TABLE =
+                "CREATE TABLE " + PhotoSchema.PHOTO_TABLE + " (" +
+                        PhotoSchema._ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
+                        PhotoSchema.PHOTO_PATH_COLUMN + " TEXT," +
+                        PhotoSchema.PHOTO_LAT_COLUMN + " REAL," +
+                        PhotoSchema.PHOTO_LNG_COLUMN + "REAL," +
+                        PhotoSchema.PHOTO_DESCRIPTION_COLUMN + "TEXT," +
+                        PhotoSchema.PHOTO_DATE_COLUMN + "TEXT," +
+                        PhotoSchema.PHOTO_ALBUM_COLUMN + "INTEGER," +
+                        "FOREIGN KEY ("+ PhotoSchema.PHOTO_ALBUM_COLUMN + ") REFERENCES " + AlbumSchema.ALBUM_TABLE + "(" + AlbumSchema._ID + "))";
+
+        public static final String SQL_DELETE_PHOTO_TABLE =
+                "DROP TABLE IF EXISTS " + PhotoSchema.PHOTO_TABLE;
     }
 
 }

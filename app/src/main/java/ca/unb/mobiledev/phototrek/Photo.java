@@ -1,8 +1,5 @@
 package ca.unb.mobiledev.phototrek;
 
-import android.location.Location;
-import android.net.Uri;
-
 import com.google.android.gms.maps.model.LatLng;
 
 public class Photo {
@@ -11,19 +8,22 @@ public class Photo {
     //private final Location mCoordinates;
     private String mDescription;
     private final String mDate;
+    private Integer mAlbumId;
 
     public Photo(LatLng coordinates, String description, String date) {
         mAbsolutePath = null;
         mCoordinates = coordinates;
         mDescription = description;
         mDate = date;
+        this.mAlbumId = null;
     }
 
-    public Photo(String absolutePath, LatLng coordinates, String description, String date) {
+    public Photo(String absolutePath, LatLng coordinates, String description, String date, int albumId) {
         mAbsolutePath = absolutePath;
         mCoordinates = coordinates;
         mDescription = description;
         mDate = date;
+        mAlbumId = albumId;
     }
 
     public String getAbsolutePath() { return mAbsolutePath; }
