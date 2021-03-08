@@ -5,7 +5,7 @@ import java.util.List;
 
 public class Album {
 
-    private int id;
+    private int mId;
     private String mTitle;
     private int mCoverImagePosition;
     private final List<Photo> mPhotos;
@@ -17,7 +17,7 @@ public class Album {
     }
 
     public Album(int id, String mTitle, List<Photo> photos) {
-        this.id = id;
+        this.mId = id;
         this.mTitle = mTitle;
         this.mCoverImagePosition = 0;
         this.mPhotos = photos;
@@ -55,11 +55,11 @@ public class Album {
     }
 
     public int getId() {
-        return id;
+        return mId;
     }
 
     public void setId(int id) {
-        this.id = id;
+        this.mId = id;
     }
 
 }

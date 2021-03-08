@@ -33,10 +33,10 @@ public class DataManager extends SQLiteOpenHelper {
 
     public boolean addAlbum(Album album) {
         SQLiteDatabase db = this.getWritableDatabase();
-        ContentValues contentValues = new ContentValues();
+        ContentValues cv = new ContentValues();
 
-        contentValues.put(AlbumSchema.ALBUM_TITLE_COLUMN, album.getTitle());
-        long result = db.insert(AlbumSchema.ALBUM_TABLE, null, contentValues);
+        cv.put(AlbumSchema.ALBUM_TITLE_COLUMN, album.getTitle());
+        long result = db.insert(AlbumSchema.ALBUM_TABLE, null, cv);
 
         return result != -1;
     }
@@ -88,6 +88,7 @@ public class DataManager extends SQLiteOpenHelper {
     }
 
     public boolean deleteAlbum(Album album) {
+        // TODO: first, delete all photos with this album ID
         SQLiteDatabase db = this.getWritableDatabase();
         String selection = AlbumSchema._ID + " = " + album.getId();
 
@@ -97,17 +98,42 @@ public class DataManager extends SQLiteOpenHelper {
 
     public boolean updateAlbum(Album album) {
         SQLiteDatabase db = this.getWritableDatabase();
-        ContentValues contentValues = new ContentValues();
-        contentValues.put(AlbumSchema.ALBUM_TITLE_COLUMN, album.getTitle());
+        ContentValues cv = new ContentValues();
+        cv.put(AlbumSchema.ALBUM_TITLE_COLUMN, album.getTitle());
         String selection = AlbumSchema._ID + " = " + album.getId();
 
-        int count = db.update(AlbumSchema.ALBUM_TABLE, contentValues, selection, null);
+        int count = db.update(AlbumSchema.ALBUM_TABLE, cv, selection, null);
         return count == 1;
+    }
+
+    public boolean addPhoto(Photo photo) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues cv = new ContentValues();
+        cv.put(PhotoSchema.PHOTO_PATH_COLUMN, photo.getAbsolutePath());
+        cv.put(PhotoSchema.PHOTO_LAT_COLUMN, photo.getCoordinates().latitude);
+        cv.put(PhotoSchema.PHOTO_LNG_COLUMN, photo.getCoordinates().longitude);
+        cv.put(PhotoSchema.PHOTO_DESCRIPTION_COLUMN, photo.getDescription());
+        cv.put(PhotoSchema.PHOTO_DATE_COLUMN, photo.getDate());
+        cv.put(PhotoSchema.PHOTO_ALBUM_COLUMN, photo.getAlbumId());
+
+        long result = db.insert(PhotoSchema.PHOTO_TABLE, null, cv);
+        return result != -1;
     }
 
     private List<Photo> getPhotosForAlbum(int albumId) {
         SQLiteDatabase db = this.getReadableDatabase();
-        return null;
+        String selection = PhotoSchema.PHOTO_ALBUM_COLUMN + " = " + albumId;
+        Cursor cursor = db.query(
+                PhotoSchema.PHOTO_TABLE,
+                null,
+                selection,
+                null,
+                null,
+                null,
+                null
+        );
+
+        return getPhotosFromCursor(cursor);
     }
 
     public List<Photo> getAllPhotos() {
@@ -140,6 +166,30 @@ public class DataManager extends SQLiteOpenHelper {
             photos.add(new Photo(photoPath, photoLatLng, photoDescription, photoDate, photoAlbum));
         }
         return photos;
+    }
+
+    public boolean deletePhoto(Photo photo) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        String selection = PhotoSchema._ID + " = " + photo.getId();
+
+        int count = db.delete(PhotoSchema.PHOTO_TABLE, selection, null);
+        return count == 1;
+    }
+
+    public boolean updatePhoto(Photo photo) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues cv = new ContentValues();
+        cv.put(PhotoSchema.PHOTO_PATH_COLUMN, photo.getAbsolutePath());
+        cv.put(PhotoSchema.PHOTO_LAT_COLUMN, photo.getCoordinates().latitude);
+        cv.put(PhotoSchema.PHOTO_LNG_COLUMN, photo.getCoordinates().longitude);
+        cv.put(PhotoSchema.PHOTO_DESCRIPTION_COLUMN, photo.getDescription());
+        cv.put(PhotoSchema.PHOTO_DATE_COLUMN, photo.getDate());
+        cv.put(PhotoSchema.PHOTO_ALBUM_COLUMN, photo.getAlbumId());
+
+        String selection = PhotoSchema._ID + " = " + photo.getId();
+
+        int count = db.update(PhotoSchema.PHOTO_TABLE, cv, selection, null);
+        return count == 1;
     }
 
     public static class AlbumSchema implements BaseColumns {

@@ -3,6 +3,7 @@ package ca.unb.mobiledev.phototrek;
 import com.google.android.gms.maps.model.LatLng;
 
 public class Photo {
+    private int mId;
     private final String mAbsolutePath;
     private LatLng mCoordinates;
     //private final Location mCoordinates;
@@ -26,7 +27,17 @@ public class Photo {
         mAlbumId = albumId;
     }
 
-    public String getAbsolutePath() { return mAbsolutePath; }
+    public int getId() {
+        return mId;
+    }
+
+    public void setId(int id) {
+        this.mId = id;
+    }
+
+    public String getAbsolutePath() {
+        return mAbsolutePath;
+    }
 
     public LatLng getCoordinates() {
         return mCoordinates;
@@ -36,13 +47,23 @@ public class Photo {
         return mDescription;
     }
 
-    public void setDescription(String description) { mDescription = description; }
+    public void setDescription(String description) {
+        mDescription = description;
+    }
 
     public String getDate() {
         return mDate;
     }
 
-    public void setCoordinates(LatLng coordinates){
+    public void setCoordinates(LatLng coordinates) {
         mCoordinates = coordinates;
+    }
+
+    public Integer getAlbumId() {
+        return mAlbumId;
+    }
+
+    public void setAlbumId(Integer albumId) {
+        this.mAlbumId = albumId;
     }
 }
