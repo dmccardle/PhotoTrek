@@ -83,7 +83,7 @@ public class AlbumListActivity extends AppCompatActivity {
         RecyclerView mRecyclerAlbums = (RecyclerView) findViewById(R.id.album_list);
         GridLayoutManager mAlbumLayoutManager = new GridLayoutManager(this, 2);
 
-        List<Album> albums = OldDataManager.getInstance().getAlbums();
+        List<Album> albums = dataManager.getAllAlbums();
         AlbumListRecyclerAdapter mAlbumListRecyclerAdapter = new AlbumListRecyclerAdapter(this, albums);
 
         mRecyclerAlbums.setLayoutManager(mAlbumLayoutManager);

@@ -29,6 +29,7 @@ public class MapActivity extends AppCompatActivity {
     private static final String APP_TAG = "PhotoTrek";
     private GoogleMap mMap;
     private static File mPhotoFile;
+    private DataManager dataManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,6 +37,8 @@ public class MapActivity extends AppCompatActivity {
         setContentView(R.layout.activity_maps);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        dataManager = new DataManager(this);
 
         FloatingActionButton fab = findViewById(R.id.fab_new_photo);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -77,7 +80,7 @@ public class MapActivity extends AppCompatActivity {
             public void onMapReady(GoogleMap googleMap) {
                 mMap = googleMap;
 
-                List<Album> albums = OldDataManager.getInstance().getAlbums();
+                List<Album> albums = dataManager.getAllAlbums();
                 for(Album album : albums) {
                     List<Photo> photos = album.getPhotos();
                     for(Photo photo : photos) {

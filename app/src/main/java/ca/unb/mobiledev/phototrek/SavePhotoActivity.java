@@ -38,7 +38,7 @@ public class SavePhotoActivity extends AppCompatActivity {
         dataManager = new DataManager(this);
 
         mSpinnerAlbums = (Spinner) findViewById(R.id.spinner_albums);
-        List<Album> albums = OldDataManager.getInstance().getAlbums();
+        List<Album> albums = dataManager.getAllAlbums();
         ArrayAdapter<Album> adapterAlbums =
                 new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, albums);
         adapterAlbums.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -80,7 +80,7 @@ public class SavePhotoActivity extends AppCompatActivity {
         String date = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
         Photo photo = new Photo(mPhotoPath, coordinates, description, date);
 
-        Album album = OldDataManager.getInstance().getAlbums().get(mSpinnerAlbums.getSelectedItemPosition());
+        Album album = dataManager.getAllAlbums().get(mSpinnerAlbums.getSelectedItemPosition());
         album.getPhotos().add(photo);
         album.setCoverImagePosition(album.getPhotos().size() - 1);
         finish();
