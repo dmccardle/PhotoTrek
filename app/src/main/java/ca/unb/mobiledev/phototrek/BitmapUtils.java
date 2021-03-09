@@ -1,21 +1,29 @@
 package ca.unb.mobiledev.phototrek;
 
+import android.Manifest;
+import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
-import android.content.res.Resources;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Matrix;
+import android.media.MediaScannerConnection;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Environment;
+import android.util.Log;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-// Source https://developer.android.com/topic/performance/graphics/load-bitmap?hl=en
+import androidx.core.app.ActivityCompat;
 
+// Source https://developer.android.com/topic/performance/graphics/load-bitmap?hl=en
 public class BitmapUtils {
     public static int calculateInSampleSize(
             BitmapFactory.Options options, int reqWidth, int reqHeight) {
@@ -55,27 +63,67 @@ public class BitmapUtils {
         return BitmapFactory.decodeFile(path, options);
     }
 
-    public static File createImageFile(Context context) throws IOException {
+    public static File createImageFile(Context context) {
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
         String imageFileName = "JPEG_" + timeStamp + "_";
         File storageDir = context.getExternalFilesDir(Environment.DIRECTORY_PICTURES);
-        File image = File.createTempFile(
-                imageFileName,   /* prefix */
-                ".jpg",   /* suffix */
-                storageDir       /* directory */
-        );
+
+        File image = null;
+        try {
+            image = File.createTempFile(imageFileName, ".jpg", storageDir);
+        } catch (IOException e) {
+            Log.w("ExternalStorage", "Error writing", e);
+        }
         return image;
     }
 
-    public static void broadcastMediaScan(Context context, String path) {
-        File f = new File(path);
-        File publicImage = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES) + "/" + f.getName());
-        f.renameTo(publicImage);
-        f = publicImage;
+    private static boolean isStoragePermissionGranted(Context context) {
+        String TAG = "Storage Permission";
+        if (Build.VERSION.SDK_INT >= 23) {
+            if (context.checkSelfPermission(android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                    == PackageManager.PERMISSION_GRANTED) {
+                Log.v(TAG, "Permission is granted");
+                return true;
+            } else {
+                Log.v(TAG, "Permission is revoked");
+                ActivityCompat.requestPermissions((Activity) context, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
+                return false;
+            }
+        }
+        else {
+            Log.v(TAG,"Permission is granted");
+            return true;
+        }
+    }
 
-        Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
-        Uri contentUri = Uri.fromFile(f);
-        mediaScanIntent.setData(contentUri);
-        context.sendBroadcast(mediaScanIntent);
+    public static void createExternalStoragePublicPicture(Context context, File originalFile) {
+        if (isStoragePermissionGranted(context)) {
+            File path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
+            try {
+                if (!path.exists()) {
+                    path.mkdirs();
+                }
+                File file = new File(path.toString(), originalFile.getName());
+                file.createNewFile();
+                InputStream is = new FileInputStream(originalFile);
+                OutputStream os = new FileOutputStream(file);
+                byte[] data = new byte[is.available()];
+                is.read(data);
+                os.write(data);
+                is.close();
+                os.close();
+
+                MediaScannerConnection.scanFile(context,
+                        new String[] { file.toString() }, null,
+                        new MediaScannerConnection.OnScanCompletedListener() {
+                            public void onScanCompleted(String path, Uri uri) {
+                                Log.i("ExternalStorage", "Scanned " + path + ":");
+                                Log.i("ExternalStorage", "-> uri=" + uri);
+                            }
+                        });
+            } catch (IOException e) {
+                Log.w("ExternalStorage", "Error writing", e);
+            }
+        }
     }
 }

@@ -1,9 +1,6 @@
 package ca.unb.mobiledev.phototrek;
 
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.os.Bundle;
 
@@ -14,30 +11,24 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.FileProvider;
 
-import android.os.Environment;
 import android.provider.MediaStore;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
 import java.io.File;
-import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
 
 public class MapActivity extends AppCompatActivity {
     static final int REQUEST_IMAGE_CAPTURE = 10;
     private static final String APP_TAG = "PhotoTrek";
     private GoogleMap mMap;
-    private static String mCurrentPhotoPath;
+    private static File mPhotoFile;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -104,19 +95,14 @@ public class MapActivity extends AppCompatActivity {
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         // Ensure that there's a camera activity to handle the intent
         if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
-            // Create the File where the photo should go
-            File photoFile = null;
-            try {
-                photoFile = BitmapUtils.createImageFile(MapActivity.this);
-                mCurrentPhotoPath = photoFile.getAbsolutePath();
-            } catch (IOException ex) {
-                // Error occurred while creating the File
-            }
-            // Continue only if the File was successfully created
-            if (photoFile != null) {
+            // Create the File where the photo should go. The file will be internal to the application.
+            mPhotoFile = null;
+            mPhotoFile = BitmapUtils.createImageFile(MapActivity.this);
+
+            if (mPhotoFile != null) {
                 Uri photoURI = FileProvider.getUriForFile(this,
                         "ca.unb.mobiledev.phototrek.provider",
-                        photoFile);
+                        mPhotoFile);
                 takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
                 startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
             }
@@ -127,14 +113,15 @@ public class MapActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
-            BitmapUtils.broadcastMediaScan(MapActivity.this, mCurrentPhotoPath);
+            // When the photo is taken successfully, create a copy in external storage, and launch the save photo form activity
+            BitmapUtils.createExternalStoragePublicPicture(MapActivity.this, mPhotoFile);
             savePhoto();
         }
     }
 
     private void savePhoto() {
         Intent intent = new Intent(MapActivity.this, SavePhotoActivity.class);
-        intent.putExtra(SavePhotoActivity.PHOTO_PATH, mCurrentPhotoPath);
+        intent.putExtra(SavePhotoActivity.PHOTO_PATH, mPhotoFile.getAbsolutePath());
         startActivity(intent);
     }
 }
