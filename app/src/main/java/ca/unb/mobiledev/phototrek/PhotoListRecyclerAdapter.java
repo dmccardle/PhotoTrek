@@ -1,7 +1,9 @@
 package ca.unb.mobiledev.phototrek;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.view.LayoutInflater;
@@ -12,6 +14,7 @@ import android.widget.TextView;
 
 import com.google.android.material.snackbar.Snackbar;
 
+import java.io.ByteArrayOutputStream;
 import java.util.List;
 
 import androidx.core.widget.ImageViewCompat;
@@ -50,6 +53,7 @@ public class PhotoListRecyclerAdapter extends RecyclerView.Adapter<PhotoListRecy
         }
 
         holder.mCurrentPosition = position;
+        holder.mPhotos = mPhotos;
     }
 
     @Override
@@ -60,6 +64,7 @@ public class PhotoListRecyclerAdapter extends RecyclerView.Adapter<PhotoListRecy
     public class ViewHolder extends RecyclerView.ViewHolder {
         public final ImageView mPhoto;
         public int mCurrentPosition;
+        public List<Photo> mPhotos;
 
         public ViewHolder(View itemView) {
             super(itemView);
@@ -68,6 +73,11 @@ public class PhotoListRecyclerAdapter extends RecyclerView.Adapter<PhotoListRecy
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    // put stuff here like this but not this :D
+                    Intent intent = new Intent(mContext, PhotoViewActivity.class);
+                    intent.putExtra("path", mPhotos.get(mCurrentPosition).getAbsolutePath());
+                    intent.putExtra("Description", mPhotos.get(mCurrentPosition).getDescription());
+                    mContext.startActivity(intent);
                 }
             });
         }

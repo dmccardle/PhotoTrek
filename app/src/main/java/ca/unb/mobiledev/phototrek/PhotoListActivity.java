@@ -1,7 +1,9 @@
 package ca.unb.mobiledev.phototrek;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -11,7 +13,9 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
@@ -26,7 +30,8 @@ import androidx.core.content.FileProvider;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-public class PhotoListActivity extends AppCompatActivity {
+public class PhotoListActivity extends AppCompatActivity{
+//public class PhotoListActivity extends AppCompatActivity{
     public static final String ALBUM_POSITION = "ca.unb.mobiledev.phototrek.ALBUM_POSITION";
     private GridLayoutManager mPhotoLayoutManager;
     private PhotoListRecyclerAdapter mPhotoListRecyclerAdapter;
@@ -35,6 +40,7 @@ public class PhotoListActivity extends AppCompatActivity {
     private GoogleMap mMap;
     static final int REQUEST_IMAGE_CAPTURE = 10;
     private static String mCurrentPhotoPath;
+    private Context mContext;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,6 +48,8 @@ public class PhotoListActivity extends AppCompatActivity {
         setContentView(R.layout.activity_photo_list);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        mContext = this;
 
         FloatingActionButton fab = findViewById(R.id.fab_new_photo);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -89,16 +97,44 @@ public class PhotoListActivity extends AppCompatActivity {
             @Override
             public void onMapReady(GoogleMap googleMap) {
                 mMap = googleMap;
+                Marker mMarker;
+                //BitmapDescriptorFactory myBitmap;
 
                 List<Photo> photos = mAlbum.getPhotos();
                 for(Photo photo : photos) {
-                    LatLng marker = photo.getCoordinates();
-                    mMap.addMarker(new MarkerOptions().position(marker).title("Marker in Freddy Beach"));
-                    mMap.moveCamera(CameraUpdateFactory.newLatLng(marker));
+                    LatLng markerCoor = photo.getCoordinates();
+                    //myBitmap = BitmapDescriptorFactory.fromPath(photo.getAbsolutePath());
+                    mMarker = mMap.addMarker(new MarkerOptions().position(markerCoor).title("Marker in Freddy Beach"));
+                    mMarker.setTag(photo);
+                    //mMarker.setIcon(BitmapDescriptorFactory.fromPath(photo.getAbsolutePath()));
+                    mMap.moveCamera(CameraUpdateFactory.newLatLng(markerCoor));
+                    mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+                        @Override
+                        public boolean onMarkerClick(Marker marker) {
+                            Photo photo = (Photo) marker.getTag();
+                            Intent intent = new Intent(mContext, PhotoViewActivity.class);
+                            intent.putExtra("path", photo.getAbsolutePath());
+                            intent.putExtra("Description", photo.getDescription());
+                            mContext.startActivity(intent);
+                            return true;
+                        }
+                    });
                 }
             }
         });
     }
+
+//    @Override
+//    public boolean onMarkerClick(final Marker marker){
+//        // need to send image somehow
+//
+//        Photo photo = (Photo) marker.getTag();
+//        Intent intent = new Intent(this, PhotoViewActivity.class);
+//        intent.putExtra("path", photo.getAbsolutePath());
+//        intent.putExtra("Description", photo.getDescription());
+//        this.startActivity(intent);
+//        return true;
+//    }
 
     private void dispatchTakePictureIntent() {
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
