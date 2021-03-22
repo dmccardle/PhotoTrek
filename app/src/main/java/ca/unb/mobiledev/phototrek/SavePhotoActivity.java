@@ -78,11 +78,10 @@ public class SavePhotoActivity extends AppCompatActivity {
         LatLng coordinates = new LatLng(0.0,0.0);
         String description = mTextDescription.getText().toString();
         String date = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-        Photo photo = new Photo(mPhotoPath, coordinates, description, date);
-
         Album album = dataManager.getAllAlbums().get(mSpinnerAlbums.getSelectedItemPosition());
-        album.getPhotos().add(photo);
-        album.setCoverImagePosition(album.getPhotos().size() - 1);
+        Photo photo = new Photo(mPhotoPath, coordinates, description, date, album.getId());
+
+        album.setCoverImagePosition(album.getPhotos().size());
         finish();
         return photo;
     }
