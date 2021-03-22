@@ -5,6 +5,8 @@
     <string name="title_activity_album">Albums</string>
     <string name="text_album_name_placeholder">TextView</string>
     <string name="icon_text_map">Map View</string>
+    <string name="icon_edit_album">Edit Album</string>
+    <string name="icon_delete_album">Delete Album</string>
     <string name="btn_save">Save</string>
     <string name="btn_ok">Ok</string>
     <string name="btn_cancel">Cancel</string>
