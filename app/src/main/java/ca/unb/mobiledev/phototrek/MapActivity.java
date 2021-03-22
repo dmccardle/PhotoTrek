@@ -68,7 +68,6 @@ public class MapActivity extends AppCompatActivity {
     }
 
     private void openAlbum() {
-        // TODO: find out why the app is crashing when starting the AlbumListActivity intent
         Intent intent = new Intent(MapActivity.this, AlbumListActivity.class);
         startActivity(intent);
     }
