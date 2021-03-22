@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.provider.BaseColumns;
+import android.util.Log;
 
 import androidx.annotation.Nullable;
 
@@ -15,6 +16,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class DataManager extends SQLiteOpenHelper {
+
+    private final String TAG = "DataManager";
 
     public DataManager(@Nullable Context context) {
         super(context, "database.db", null, 1);
@@ -88,12 +91,26 @@ public class DataManager extends SQLiteOpenHelper {
     }
 
     public boolean deleteAlbum(Album album) {
-        // TODO: first, delete all photos with this album ID
+        if (!deletePhotosFromAlbum(album)) {
+            Log.e(TAG, "Could not delete photos from album.");
+            return false;
+        }
         SQLiteDatabase db = this.getWritableDatabase();
         String selection = AlbumSchema._ID + " = " + album.getId();
 
         int count = db.delete(AlbumSchema.ALBUM_TABLE, selection, null);
         return count == 1;
+    }
+
+    private boolean deletePhotosFromAlbum(Album album) {
+        List<Photo> photoList = getPhotosForAlbum(album.getId());
+
+        SQLiteDatabase db = this.getWritableDatabase();
+        String selection = PhotoSchema.PHOTO_ALBUM_COLUMN + " = " + album.getId();
+
+        int count = db.delete(PhotoSchema.PHOTO_TABLE, selection, null);
+
+        return count == photoList.size();
     }
 
     public boolean updateAlbum(Album album) {
@@ -219,11 +236,11 @@ public class DataManager extends SQLiteOpenHelper {
                         PhotoSchema._ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
                         PhotoSchema.PHOTO_PATH_COLUMN + " TEXT," +
                         PhotoSchema.PHOTO_LAT_COLUMN + " REAL," +
-                        PhotoSchema.PHOTO_LNG_COLUMN + "REAL," +
-                        PhotoSchema.PHOTO_DESCRIPTION_COLUMN + "TEXT," +
-                        PhotoSchema.PHOTO_DATE_COLUMN + "TEXT," +
-                        PhotoSchema.PHOTO_ALBUM_COLUMN + "INTEGER," +
-                        "FOREIGN KEY ("+ PhotoSchema.PHOTO_ALBUM_COLUMN + ") REFERENCES " + AlbumSchema.ALBUM_TABLE + "(" + AlbumSchema._ID + "))";
+                        PhotoSchema.PHOTO_LNG_COLUMN + " REAL," +
+                        PhotoSchema.PHOTO_DESCRIPTION_COLUMN + " TEXT," +
+                        PhotoSchema.PHOTO_DATE_COLUMN + " TEXT," +
+                        PhotoSchema.PHOTO_ALBUM_COLUMN + " INTEGER," +
+                        " FOREIGN KEY ("+ PhotoSchema.PHOTO_ALBUM_COLUMN + ") REFERENCES " + AlbumSchema.ALBUM_TABLE + "(" + AlbumSchema._ID + "))";
 
         public static final String SQL_DELETE_PHOTO_TABLE =
                 "DROP TABLE IF EXISTS " + PhotoSchema.PHOTO_TABLE;
