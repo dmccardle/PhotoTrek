@@ -32,10 +32,13 @@ public class DataManager extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int i, int i1) {
+        db.execSQL(AlbumSchema.SQL_DELETE_ALBUM_TABLE);
+        db.execSQL(PhotoSchema.SQL_DELETE_PHOTO_TABLE);
         db.execSQL(AlbumSchema.SQL_CREATE_ALBUM_TABLE);
         db.execSQL(PhotoSchema.SQL_CREATE_PHOTO_TABLE);
         createFirstAlbum();
     }
+
 
     private void createFirstAlbum() {
         Album firstAlbum = new Album("First Album");
@@ -43,14 +46,14 @@ public class DataManager extends SQLiteOpenHelper {
     }
 
     public boolean addAlbum(Album album) {
-        Log.e(TAG, "Starting to add album...");
+        Log.i(TAG, "Starting to add album...");
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues cv = new ContentValues();
 
         cv.put(AlbumSchema.ALBUM_TITLE_COLUMN, album.getTitle());
         long result = db.insert(AlbumSchema.ALBUM_TABLE, null, cv);
 
-        Log.e(TAG, "Finished adding album.");
+        Log.i(TAG, "Finished adding album.");
         return result != -1;
     }
 
@@ -73,7 +76,7 @@ public class DataManager extends SQLiteOpenHelper {
     }
 
     public List<Album> getAllAlbums() {
-        Log.e(TAG, "Starting to get all albums...");
+        Log.i(TAG, "Starting to get all albums...");
         SQLiteDatabase db = this.getReadableDatabase();
 
         Cursor cursor = db.query(
@@ -87,7 +90,7 @@ public class DataManager extends SQLiteOpenHelper {
         );
 
         List<Album> albums = getAlbumsFromCursor(cursor);
-        Log.e(TAG, "Finished getting all albums.");
+        Log.i(TAG, "Finished getting all albums.");
         return albums;
     }
 
@@ -136,7 +139,7 @@ public class DataManager extends SQLiteOpenHelper {
     }
 
     public boolean addPhoto(Photo photo) {
-        Log.e(TAG, "Starting to add photo...");
+        Log.i(TAG, "Starting to add photo...");
 
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues cv = new ContentValues();
@@ -148,7 +151,7 @@ public class DataManager extends SQLiteOpenHelper {
         cv.put(PhotoSchema.PHOTO_ALBUM_COLUMN, photo.getAlbumId());
 
         long result = db.insert(PhotoSchema.PHOTO_TABLE, null, cv);
-        Log.e(TAG, "Finished adding photo.");
+        Log.i(TAG, "Finished adding photo.");
         return result != -1;
     }
 

@@ -12,21 +12,15 @@ public class Album {
 
     public Album(String mTitle) {
         this.mTitle = mTitle;
-        this.mCoverImagePosition = 0;
+        this.mCoverImagePosition = -1;
         this.mPhotos = new ArrayList<Photo>();
     }
 
     public Album(int id, String mTitle, List<Photo> photos) {
         this.mId = id;
         this.mTitle = mTitle;
-        this.mCoverImagePosition = 0;
+        this.mCoverImagePosition = -1;
         this.mPhotos = photos;
-    }
-
-    public Album(String title, List<Photo> photos) {
-        mTitle = title;
-        mPhotos = photos;
-        mCoverImagePosition = photos.size() - 1;
     }
 
     public String getTitle() {
