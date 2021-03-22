@@ -6,25 +6,27 @@ public class Photo {
     private int mId;
     private final String mAbsolutePath;
     private LatLng mCoordinates;
-    //private final Location mCoordinates;
     private String mDescription;
     private final String mDate;
     private Integer mAlbumId;
 
-    public Photo(LatLng coordinates, String description, String date) {
-        mAbsolutePath = null;
-        mCoordinates = coordinates;
-        mDescription = description;
-        mDate = date;
-        this.mAlbumId = null;
+    // Used in creating photos
+    public Photo(String absolutePath, LatLng coordinates, String description, String date, int albumId) {
+        this.mAbsolutePath = absolutePath;
+        this.mCoordinates = coordinates;
+        this.mDescription = description;
+        this.mDate = date;
+        this.mAlbumId = albumId;
     }
 
-    public Photo(String absolutePath, LatLng coordinates, String description, String date, int albumId) {
-        mAbsolutePath = absolutePath;
-        mCoordinates = coordinates;
-        mDescription = description;
-        mDate = date;
-        mAlbumId = albumId;
+    // Used in restoring photos from the database
+    public Photo(int id, String absolutePath, LatLng coordinates, String description, String date, int albumId) {
+        this.mId = id;
+        this.mAbsolutePath = absolutePath;
+        this.mCoordinates = coordinates;
+        this.mDescription = description;
+        this.mDate = date;
+        this.mAlbumId = albumId;
     }
 
     public int getId() {

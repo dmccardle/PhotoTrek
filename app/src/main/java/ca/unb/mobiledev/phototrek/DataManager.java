@@ -20,14 +20,14 @@ public class DataManager extends SQLiteOpenHelper {
     private final String TAG = "DataManager";
 
     public DataManager(@Nullable Context context) {
-        super(context, "database.db", null, 1);
+        super(context, "database.db", null, 2);
     }
 
     @Override
     public void onCreate(SQLiteDatabase db) {
         db.execSQL(AlbumSchema.SQL_CREATE_ALBUM_TABLE);
         db.execSQL(PhotoSchema.SQL_CREATE_PHOTO_TABLE);
-        createFirstAlbum();
+        createFirstAlbum(db);
     }
 
     @Override
@@ -36,13 +36,16 @@ public class DataManager extends SQLiteOpenHelper {
         db.execSQL(PhotoSchema.SQL_DELETE_PHOTO_TABLE);
         db.execSQL(AlbumSchema.SQL_CREATE_ALBUM_TABLE);
         db.execSQL(PhotoSchema.SQL_CREATE_PHOTO_TABLE);
-        createFirstAlbum();
+        createFirstAlbum(db);
     }
 
 
-    private void createFirstAlbum() {
+    private void createFirstAlbum(SQLiteDatabase db) {
         Album firstAlbum = new Album("First Album");
-        this.addAlbum(firstAlbum);
+        ContentValues cv = new ContentValues();
+        cv.put(AlbumSchema.ALBUM_TITLE_COLUMN, firstAlbum.getTitle());
+        cv.put(AlbumSchema.ALBUM_COVER_IMAGE_POSITION, firstAlbum.getCoverImagePosition());
+        db.insert(AlbumSchema.ALBUM_TABLE, null, cv);
     }
 
     public boolean addAlbum(Album album) {
@@ -51,6 +54,7 @@ public class DataManager extends SQLiteOpenHelper {
         ContentValues cv = new ContentValues();
 
         cv.put(AlbumSchema.ALBUM_TITLE_COLUMN, album.getTitle());
+        cv.put(AlbumSchema.ALBUM_COVER_IMAGE_POSITION, album.getCoverImagePosition());
         long result = db.insert(AlbumSchema.ALBUM_TABLE, null, cv);
 
         Log.i(TAG, "Finished adding album.");
@@ -99,8 +103,9 @@ public class DataManager extends SQLiteOpenHelper {
         while (cursor.moveToNext()) {
             int albumId = cursor.getInt(0);
             String albumTitle = cursor.getString(1);
+            int albumCoverImagePosition = cursor.getInt(2);
             List<Photo> albumPhotos = getPhotosForAlbum(albumId);
-            albums.add(new Album(albumId, albumTitle, albumPhotos));
+            albums.add(new Album(albumId, albumTitle, albumCoverImagePosition, albumPhotos));
         }
         return albums;
     }
@@ -132,6 +137,7 @@ public class DataManager extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues cv = new ContentValues();
         cv.put(AlbumSchema.ALBUM_TITLE_COLUMN, album.getTitle());
+        cv.put(AlbumSchema.ALBUM_COVER_IMAGE_POSITION, album.getCoverImagePosition());
         String selection = AlbumSchema._ID + " = " + album.getId();
 
         int count = db.update(AlbumSchema.ALBUM_TABLE, cv, selection, null);
@@ -198,7 +204,7 @@ public class DataManager extends SQLiteOpenHelper {
             String photoDate = cursor.getString(5);
             int photoAlbum = cursor.getInt(6);
 
-            photos.add(new Photo(photoPath, photoLatLng, photoDescription, photoDate, photoAlbum));
+            photos.add(new Photo(photoId, photoPath, photoLatLng, photoDescription, photoDate, photoAlbum));
         }
         return photos;
     }
@@ -230,11 +236,13 @@ public class DataManager extends SQLiteOpenHelper {
     public static class AlbumSchema implements BaseColumns {
         public static final String ALBUM_TABLE = "ALBUMS";
         public static final String ALBUM_TITLE_COLUMN = "ALBUM_TITLE";
+        public static final String ALBUM_COVER_IMAGE_POSITION = "ALBUM_COVER";
 
         public static final String SQL_CREATE_ALBUM_TABLE =
                 "CREATE TABLE " + AlbumSchema.ALBUM_TABLE + " (" +
                         AlbumSchema._ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
-                        AlbumSchema.ALBUM_TITLE_COLUMN + " TEXT)";
+                        AlbumSchema.ALBUM_TITLE_COLUMN + " TEXT, " +
+                        AlbumSchema.ALBUM_COVER_IMAGE_POSITION + " INTEGER )";
 
         public static final String SQL_DELETE_ALBUM_TABLE =
                 "DROP TABLE IF EXISTS " + AlbumSchema.ALBUM_TABLE;

@@ -10,16 +10,18 @@ public class Album {
     private int mCoverImagePosition;
     private final List<Photo> mPhotos;
 
+    // Used in creating albums
     public Album(String mTitle) {
         this.mTitle = mTitle;
         this.mCoverImagePosition = -1;
         this.mPhotos = new ArrayList<Photo>();
     }
 
-    public Album(int id, String mTitle, List<Photo> photos) {
+    // Used in restoring albums from the database
+    public Album(int id, String title, int coverImagePosition, List<Photo> photos) {
         this.mId = id;
-        this.mTitle = mTitle;
-        this.mCoverImagePosition = -1;
+        this.mTitle = title;
+        this.mCoverImagePosition = coverImagePosition;
         this.mPhotos = photos;
     }
 
