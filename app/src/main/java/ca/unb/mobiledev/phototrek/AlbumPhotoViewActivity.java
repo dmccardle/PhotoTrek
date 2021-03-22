@@ -23,7 +23,7 @@ import androidx.core.content.FileProvider;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-public class PhotoListActivity extends AppCompatActivity {
+public class AlbumPhotoViewActivity extends AppCompatActivity {
     public static final String ALBUM_POSITION = "ca.unb.mobiledev.phototrek.ALBUM_POSITION";
     private GridLayoutManager mPhotoLayoutManager;
     private PhotoListRecyclerAdapter mPhotoListRecyclerAdapter;
@@ -106,7 +106,7 @@ public class PhotoListActivity extends AppCompatActivity {
         if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
             // Create the File where the photo should go. The file will be internal to the application.
             mPhotoFile = null;
-            mPhotoFile = BitmapUtils.createImageFile(PhotoListActivity.this);
+            mPhotoFile = BitmapUtils.createImageFile(AlbumPhotoViewActivity.this);
 
             if (mPhotoFile != null) {
                 Uri photoURI = FileProvider.getUriForFile(this,
@@ -123,13 +123,13 @@ public class PhotoListActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
             // When the photo is taken successfully, create a copy in external storage, and launch the save photo form activity
-            BitmapUtils.createExternalStoragePublicPicture(PhotoListActivity.this, mPhotoFile);
+            BitmapUtils.createExternalStoragePublicPicture(AlbumPhotoViewActivity.this, mPhotoFile);
             savePhoto();
         }
     }
 
     private void savePhoto() {
-        Intent intent = new Intent(PhotoListActivity.this, SavePhotoActivity.class);
+        Intent intent = new Intent(AlbumPhotoViewActivity.this, SavePhotoActivity.class);
         intent.putExtra(SavePhotoActivity.PHOTO_PATH, mPhotoFile.getAbsolutePath());
         startActivity(intent);
     }
