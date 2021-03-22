@@ -83,6 +83,7 @@ public class SavePhotoActivity extends AppCompatActivity {
         dataManager.addPhoto(photo);
 
         album.setCoverImagePosition(album.getPhotos().size());
+        dataManager.updateAlbum(album);
         finish();
         return photo;
     }
