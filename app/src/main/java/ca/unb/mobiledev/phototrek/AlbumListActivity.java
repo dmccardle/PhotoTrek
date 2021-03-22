@@ -86,10 +86,10 @@ public class AlbumListActivity extends AppCompatActivity {
         mRecyclerAlbums.setAdapter(mAlbumListRecyclerAdapter);
     }
 
-    // Uses the res/menu/menu_maps.xml resource to populate the actions.
+    // Uses the res/menu/menu_albums.xml resource to populate the actions.
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_album, menu);
+        getMenuInflater().inflate(R.menu.menu_albums, menu);
         return true;
     }
 

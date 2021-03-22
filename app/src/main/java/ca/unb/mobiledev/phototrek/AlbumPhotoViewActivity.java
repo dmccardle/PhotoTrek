@@ -4,6 +4,8 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -65,6 +67,25 @@ public class AlbumPhotoViewActivity extends AppCompatActivity {
         super.onResume();
         mPhotoListRecyclerAdapter.notifyDataSetChanged();
         mPhotoListRecyclerAdapter.notifyDataSetChanged();
+    }
+
+    // Uses the res/menu/menu_albums.xml resource to populate the actions.
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_album_view, menu);
+        return true;
+    }
+
+    // Handles clicks on the menu
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if (id == R.id.action_edit_album) {
+            // TODO: show alert with field to edit album name
+        } else if (id == R.id.action_delete_album) {
+            // TODO: show alert with confirmation to delete album
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     private void setToolbarLabel() {
