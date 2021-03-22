@@ -21,7 +21,6 @@ import java.util.List;
 
 public class AlbumListActivity extends AppCompatActivity {
 
-    //private String albumTitle = "";
     private DataManager dataManager;
 
     @Override
@@ -37,8 +36,6 @@ public class AlbumListActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-//                        .setAction("Action", null).show();
                 addNewAlbum();
             }
         });
@@ -50,9 +47,7 @@ public class AlbumListActivity extends AppCompatActivity {
         AlertDialog.Builder alert = new AlertDialog.Builder(this);
 
         alert.setTitle("Name Album:");
-        //alert.setMessage("Message");
 
-        // Set an EditText view to get user input
         final EditText input = new EditText(this);
         alert.setView(input);
 

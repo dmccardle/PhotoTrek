@@ -80,6 +80,7 @@ public class SavePhotoActivity extends AppCompatActivity {
         String date = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
         Album album = dataManager.getAllAlbums().get(mSpinnerAlbums.getSelectedItemPosition());
         Photo photo = new Photo(mPhotoPath, coordinates, description, date, album.getId());
+        dataManager.addPhoto(photo);
 
         album.setCoverImagePosition(album.getPhotos().size());
         finish();
