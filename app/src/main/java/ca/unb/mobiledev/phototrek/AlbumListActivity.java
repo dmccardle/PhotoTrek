@@ -69,7 +69,7 @@ public class AlbumListActivity extends AppCompatActivity {
         alert.show();
     }
 
-    private void refreshActivity(){
+    private void refreshActivity() {
         Intent intent = getIntent();
         finish();
         startActivity(intent);
