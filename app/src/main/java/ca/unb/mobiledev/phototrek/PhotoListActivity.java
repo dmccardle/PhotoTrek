@@ -32,6 +32,7 @@ public class PhotoListActivity extends AppCompatActivity {
     private GoogleMap mMap;
     static final int REQUEST_IMAGE_CAPTURE = 10;
     private static File mPhotoFile;
+    private DataManager dataManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,6 +40,8 @@ public class PhotoListActivity extends AppCompatActivity {
         setContentView(R.layout.activity_photo_list);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        dataManager = new DataManager(this);
 
         FloatingActionButton fab = findViewById(R.id.fab_new_photo);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -50,7 +53,7 @@ public class PhotoListActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         mAlbumPosition = intent.getIntExtra(ALBUM_POSITION, -1);
-        mAlbum = DataManager.getInstance().getAlbums().get(mAlbumPosition);
+        mAlbum = dataManager.getAllAlbums().get(mAlbumPosition);
 
         initializeMap();
         displayPhotos();
