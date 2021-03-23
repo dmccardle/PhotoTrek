@@ -7,4 +7,11 @@
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="phototrek_gray">#FF484848</color>
+    <color name="phototrek_orange">#FFE6B30D</color>
+    <color name="phototrek_orange_dark">#FFB68E0B</color>
+    <color name="phototrek_orange_light">#FFF4C83A</color>
+    <color name="phototrek_blue">#FF1577B9</color>
+    <color name="phototrek_blue_dark">#FF0f5583</color>
+    <color name="phototrek_blue_light">#FF3aa3e9</color>
 </resources>

@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -14,6 +13,8 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.text.InputType;
+import android.view.ContextThemeWrapper;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -23,9 +24,7 @@ import java.util.List;
 
 public class AlbumListActivity extends AppCompatActivity {
 
-    private GridLayoutManager mAlbumLayoutManager;
-    private AlbumListRecyclerAdapter mAlbumListRecyclerAdapter;
-    //private String albumTitle = "";
+    private DataManager dataManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,12 +33,12 @@ public class AlbumListActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        dataManager = new DataManager(this);
+
         FloatingActionButton fab = findViewById(R.id.fab_new_photo);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-//                        .setAction("Action", null).show();
                 addNewAlbum();
             }
         });
@@ -48,26 +47,20 @@ public class AlbumListActivity extends AppCompatActivity {
     }
 
     private void addNewAlbum(){
-        AlertDialog.Builder alert = new AlertDialog.Builder(this);
-
-        alert.setTitle("Name Album:");
-        //alert.setMessage("Message");
-
-        // Set an EditText view to get user input
-        final EditText input = new EditText(this);
-        alert.setView(input);
-
-        alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+        AlertDialog.Builder alert = new AlertDialog.Builder(new ContextThemeWrapper(this, R.style.AlbumCreationDialog));
+        LayoutInflater inflater = this.getLayoutInflater();
+        View dialogView = inflater.inflate(R.layout.dialog_album, null);
+        alert.setView(dialogView);
+        EditText input = dialogView.findViewById(R.id.txtAlbumName);
+        alert.setPositiveButton(R.string.btn_ok, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int whichButton) {
-
-                // adding album with name input
-                Album newAlbum = DataManager.getInstance().createAlbum(input.getText().toString());
-                DataManager.getInstance().addAlbum(newAlbum);
+                Album newAlbum = new Album(input.getText().toString());
+                dataManager.addAlbum(newAlbum);
                 refreshActivity();
             }
         });
 
-        alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+        alert.setNegativeButton(R.string.btn_cancel, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int whichButton) {
                 // Canceled.
             }
@@ -84,10 +77,10 @@ public class AlbumListActivity extends AppCompatActivity {
 
     private void displayAlbums() {
         RecyclerView mRecyclerAlbums = (RecyclerView) findViewById(R.id.album_list);
-        mAlbumLayoutManager = new GridLayoutManager(this, 2);
+        GridLayoutManager mAlbumLayoutManager = new GridLayoutManager(this, 2);
 
-        List<Album> albums = DataManager.getInstance().getAlbums();
-        mAlbumListRecyclerAdapter = new AlbumListRecyclerAdapter(this, albums);
+        List<Album> albums = dataManager.getAllAlbums();
+        AlbumListRecyclerAdapter mAlbumListRecyclerAdapter = new AlbumListRecyclerAdapter(this, albums);
 
         mRecyclerAlbums.setLayoutManager(mAlbumLayoutManager);
         mRecyclerAlbums.setAdapter(mAlbumListRecyclerAdapter);

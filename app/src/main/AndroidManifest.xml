@@ -38,11 +38,10 @@
             android:theme="@style/Theme.PhotoTrek.NoActionBar" />
         <activity
             android:name=".MapActivity"
-            android:label="@string/title_activity_maps"
+            android:label="@string/app_name"
             android:theme="@style/Theme.PhotoTrek.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -68,5 +67,4 @@
                 android:resource="@xml/file_paths" />
         </provider>
     </application>
-
 </manifest>

@@ -45,10 +45,10 @@ public class AlbumListRecyclerAdapter extends RecyclerView.Adapter<AlbumListRecy
             holder.mCoverPhoto.setImageResource(R.drawable.ic_empty_album);
         } else {
             String photoPath = album.getPhotos().get(coverImagePosition).getAbsolutePath();
-            Bitmap thumbnail = BitmapUtils.decodeSampledBitmapFromResource(photoPath, 256, 256);
-            if (thumbnail == null) {
+            if (photoPath == null) {
                 holder.mCoverPhoto.setImageResource(R.drawable.ic_empty_album);
             } else {
+                Bitmap thumbnail = BitmapUtils.decodeSampledBitmapFromResource(photoPath, 256, 256);
                 Bitmap resized = ThumbnailUtils.extractThumbnail(thumbnail, 256, 256);
                 ImageViewCompat.setImageTintList( holder.mCoverPhoto, null);
                 holder.mCoverPhoto.setImageBitmap(resized);

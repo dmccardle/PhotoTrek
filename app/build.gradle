@@ -3,7 +3,7 @@ plugins {
 }
 
 android {
-    compileSdkVersion 30
+    compileSdkVersion 28
 
     defaultConfig {
         applicationId "ca.unb.mobiledev.phototrek"
@@ -43,7 +43,7 @@ dependencies {
     implementation 'androidx.navigation:navigation-fragment:2.2.2'
     implementation 'androidx.navigation:navigation-ui:2.2.2'
     implementation 'com.google.android.gms:play-services-location:18.0.0'
-    implementation 'androidx.wear:wear:1.1.0'
+    implementation 'androidx.exifinterface:exifinterface:1.2.0'
     testImplementation 'junit:junit:4.+'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'

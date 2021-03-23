@@ -26,7 +26,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:srcCompat="@drawable/ic_photo_placeholder"
-                app:tint="#673AB7"
+                app:tint="?attr/colorSecondary"
                 tools:srcCompat="@drawable/ic_photo_placeholder" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
