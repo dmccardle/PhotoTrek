@@ -12,6 +12,9 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.text.InputType;
+import android.view.ContextThemeWrapper;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -44,14 +47,12 @@ public class AlbumListActivity extends AppCompatActivity {
     }
 
     private void addNewAlbum(){
-        AlertDialog.Builder alert = new AlertDialog.Builder(this);
-
-        alert.setTitle("Name Album:");
-
-        final EditText input = new EditText(this);
-        alert.setView(input);
-
-        alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+        AlertDialog.Builder alert = new AlertDialog.Builder(new ContextThemeWrapper(this, R.style.AlbumCreationDialog));
+        LayoutInflater inflater = this.getLayoutInflater();
+        View dialogView = inflater.inflate(R.layout.dialog_album, null);
+        alert.setView(dialogView);
+        EditText input = dialogView.findViewById(R.id.txtAlbumName);
+        alert.setPositiveButton(R.string.btn_ok, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int whichButton) {
                 Album newAlbum = new Album(input.getText().toString());
                 dataManager.addAlbum(newAlbum);
@@ -59,7 +60,7 @@ public class AlbumListActivity extends AppCompatActivity {
             }
         });
 
-        alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+        alert.setNegativeButton(R.string.btn_cancel, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int whichButton) {
                 // Canceled.
             }
