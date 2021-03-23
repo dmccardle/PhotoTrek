@@ -46,6 +46,12 @@ public class AlbumListActivity extends AppCompatActivity {
         displayAlbums();
     }
 
+    @Override
+    protected void onRestart() {
+        this.refreshActivity();
+        super.onRestart();
+    }
+
     private void addNewAlbum(){
         AlertDialog.Builder alert = new AlertDialog.Builder(new ContextThemeWrapper(this, R.style.AlbumCreationDialog));
         LayoutInflater inflater = this.getLayoutInflater();

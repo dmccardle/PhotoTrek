@@ -67,6 +67,18 @@ public class MapActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    protected void onRestart() {
+        this.refreshActivity();
+        super.onRestart();
+    }
+
+    private void refreshActivity() {
+        Intent intent = getIntent();
+        finish();
+        startActivity(intent);
+    }
+
     private void openAlbum() {
         Intent intent = new Intent(MapActivity.this, AlbumListActivity.class);
         startActivity(intent);
