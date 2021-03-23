@@ -63,7 +63,7 @@ public class LocationFinder {
         return new double[]{latitude, longitude};
     }
 
-    public void setPhotoLocation(Photo photo){
+    public void setPhotoLocation(Photo photo, DataManager dataManager){
         if(ActivityCompat.checkSelfPermission(context,
                 Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED){
             fusedLocationProviderClient.getLastLocation().addOnCompleteListener(new OnCompleteListener<Location>() {
@@ -80,6 +80,9 @@ public class LocationFinder {
                             latitude = location.getLatitude();
                             LatLng latlong = new LatLng(latitude, longitude);
                             photo.setCoordinates(latlong);
+                            dataManager.deletePhoto(photo);
+                            dataManager.addPhoto(photo);
+                            Log.i("PHOTO", photo.getCoordinates().latitude + " ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~LOCATIONFINDER~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ " + photo.getCoordinates().longitude);
                         } catch (IOException e){
                             e.printStackTrace();
                         }

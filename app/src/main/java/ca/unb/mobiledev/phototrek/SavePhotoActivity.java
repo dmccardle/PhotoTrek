@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -52,7 +53,8 @@ public class SavePhotoActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Photo photo = savePhoto();
-                getLocation(photo);
+                Log.i("PHOTO", photo.getCoordinates().latitude + " ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~SAVE ACTRIVIY~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ " + photo.getCoordinates().longitude);
+                //dataManager.updatePhoto(photo);
             }
         });
         Button mCancelButton = (Button) findViewById(R.id.btn_cancel);
@@ -75,11 +77,19 @@ public class SavePhotoActivity extends AppCompatActivity {
     }
 
     private Photo savePhoto(){
-        LatLng coordinates = new LatLng(0.0,0.0);
+        LatLng coordinates = new LatLng(1.0,1.0);
         String description = mTextDescription.getText().toString();
         String date = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
         Album album = dataManager.getAllAlbums().get(mSpinnerAlbums.getSelectedItemPosition());
+        //coords.latitude
         Photo photo = new Photo(mPhotoPath, coordinates, description, date, album.getId());
+        getLocation(photo);
+        while(photo.getCoordinates().latitude == 1.0){
+            Log.i("PHOTO", photo.getCoordinates().latitude + " ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~LOOP~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ " + photo.getCoordinates().longitude);
+            LatLng c = new LatLng(2.0,2.0);
+            photo.setCoordinates(c);
+        }
+        Log.i("PHOTO", photo.getCoordinates().latitude + " ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~LOOP~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ " + photo.getCoordinates().longitude);
         dataManager.addPhoto(photo);
 
         album.setCoverImagePosition(album.getPhotos().size());
@@ -90,7 +100,7 @@ public class SavePhotoActivity extends AppCompatActivity {
 
     private void getLocation(Photo photo){
         LocationFinder locationFinder = new LocationFinder(this, this);
-        locationFinder.setPhotoLocation(photo);
+        locationFinder.setPhotoLocation(photo, dataManager);
     }
 
 }

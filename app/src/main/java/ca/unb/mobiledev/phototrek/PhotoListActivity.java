@@ -7,6 +7,7 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.View;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -104,6 +105,7 @@ public class PhotoListActivity extends AppCompatActivity{
                 List<Photo> photos = mAlbum.getPhotos();
                 for(Photo photo : photos) {
                     LatLng markerCoor = photo.getCoordinates();
+                    Log.i("PHOTO", photo.getCoordinates().latitude + " ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~LOOPER OF MARKER~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ " + photo.getCoordinates().longitude);
                     //myBitmap = BitmapDescriptorFactory.fromPath(photo.getAbsolutePath());
                     mMarker = mMap.addMarker(new MarkerOptions().position(markerCoor).title("Marker in Freddy Beach"));
                     mMarker.setTag(photo);
