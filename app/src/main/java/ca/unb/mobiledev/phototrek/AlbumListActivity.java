@@ -19,6 +19,9 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.TextView;
+
+import org.w3c.dom.Text;
 
 import java.util.List;
 
@@ -82,14 +85,24 @@ public class AlbumListActivity extends AppCompatActivity {
     }
 
     private void displayAlbums() {
-        RecyclerView mRecyclerAlbums = (RecyclerView) findViewById(R.id.album_list);
-        GridLayoutManager mAlbumLayoutManager = new GridLayoutManager(this, 2);
+        RecyclerView recyclerAlbums = (RecyclerView) findViewById(R.id.album_list);
+        TextView noAlbumsTextView = (TextView) findViewById(R.id.noAlbumsTextView);
+        GridLayoutManager albumLayoutManager = new GridLayoutManager(this, 2);
 
         List<Album> albums = dataManager.getAllAlbums();
-        AlbumListRecyclerAdapter mAlbumListRecyclerAdapter = new AlbumListRecyclerAdapter(this, albums);
+        if (albums.isEmpty()) {
+            recyclerAlbums.setVisibility(View.GONE);
+            noAlbumsTextView.setVisibility(View.VISIBLE);
+        }
+        else {
+            recyclerAlbums.setVisibility(View.VISIBLE);
+            noAlbumsTextView.setVisibility(View.GONE);
+        }
 
-        mRecyclerAlbums.setLayoutManager(mAlbumLayoutManager);
-        mRecyclerAlbums.setAdapter(mAlbumListRecyclerAdapter);
+        AlbumListRecyclerAdapter albumListRecyclerAdapter = new AlbumListRecyclerAdapter(this, albums);
+
+        recyclerAlbums.setLayoutManager(albumLayoutManager);
+        recyclerAlbums.setAdapter(albumListRecyclerAdapter);
     }
 
     // Uses the res/menu/menu_albums.xml resource to populate the actions.
