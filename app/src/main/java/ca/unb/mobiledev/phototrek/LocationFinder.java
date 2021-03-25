@@ -71,20 +71,20 @@ public class LocationFinder {
                 public void onComplete(@NonNull Task<Location> task) {
                     Location location = task.getResult();
                     if(location != null){
-                        try {
-                            Geocoder geocoder = new Geocoder(context, Locale.getDefault());
-                            List<Address> addresses = geocoder.getFromLocation(
-                                    location.getLatitude(), location.getLongitude(), 1
-                            );
+//                        try {
+//                            Geocoder geocoder = new Geocoder(context, Locale.getDefault());
+//                            List<Address> addresses = geocoder.getFromLocation(
+//                                    location.getLatitude(), location.getLongitude(), 1
+//                            );
                             longitude = location.getLongitude();
                             latitude = location.getLatitude();
                             LatLng latlong = new LatLng(latitude, longitude);
                             photo.setCoordinates(latlong);
                             dataManager.addPhoto(photo);
                             Log.i("PHOTO", photo.getCoordinates().latitude + " ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~LOCATIONFINDER~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ " + photo.getCoordinates().longitude);
-                        } catch (IOException e){
-                            e.printStackTrace();
-                        }
+//                        } catch (IOException e){
+//                            e.printStackTrace();
+//                        }
                     }
                 }
             });
