@@ -49,8 +49,6 @@ public class SavePhotoActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Photo photo = savePhoto();
-                Log.i("PHOTO", photo.getCoordinates().latitude + " ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~SAVE ACTRIVIY~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ " + photo.getCoordinates().longitude);
-                //dataManager.updatePhoto(photo);
             }
         });
         Button mCancelButton = (Button) findViewById(R.id.btn_cancel);

@@ -73,7 +73,6 @@ public class PhotoListRecyclerAdapter extends RecyclerView.Adapter<PhotoListRecy
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    // put stuff here like this but not this :D
                     Intent intent = new Intent(mContext, PhotoViewActivity.class);
                     intent.putExtra("path", mPhotos.get(mCurrentPosition).getAbsolutePath());
                     intent.putExtra("Description", mPhotos.get(mCurrentPosition).getDescription());

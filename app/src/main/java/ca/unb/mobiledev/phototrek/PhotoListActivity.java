@@ -105,11 +105,8 @@ public class PhotoListActivity extends AppCompatActivity{
                 List<Photo> photos = mAlbum.getPhotos();
                 for(Photo photo : photos) {
                     LatLng markerCoor = photo.getCoordinates();
-                    Log.i("PHOTO", photo.getCoordinates().latitude + " ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~LOOPER OF MARKER~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ " + photo.getCoordinates().longitude);
-                    //myBitmap = BitmapDescriptorFactory.fromPath(photo.getAbsolutePath());
                     mMarker = mMap.addMarker(new MarkerOptions().position(markerCoor).title("Marker in Freddy Beach"));
                     mMarker.setTag(photo);
-                    //mMarker.setIcon(BitmapDescriptorFactory.fromPath(photo.getAbsolutePath()));
                     mMap.moveCamera(CameraUpdateFactory.newLatLng(markerCoor));
                     mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
                         @Override
@@ -126,18 +123,6 @@ public class PhotoListActivity extends AppCompatActivity{
             }
         });
     }
-
-//    @Override
-//    public boolean onMarkerClick(final Marker marker){
-//        // need to send image somehow
-//
-//        Photo photo = (Photo) marker.getTag();
-//        Intent intent = new Intent(this, PhotoViewActivity.class);
-//        intent.putExtra("path", photo.getAbsolutePath());
-//        intent.putExtra("Description", photo.getDescription());
-//        this.startActivity(intent);
-//        return true;
-//    }
 
     private void dispatchTakePictureIntent() {
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);

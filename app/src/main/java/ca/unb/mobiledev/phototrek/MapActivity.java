@@ -89,7 +89,6 @@ public class MapActivity extends AppCompatActivity {
                 for(Album album : albums) {
                     List<Photo> photos = album.getPhotos();
                     for(Photo photo : photos) {
-                        // Add a marker in Fredericton and move the camera
                         LatLng marker = photo.getCoordinates();
                         Marker mMarker;
                         mMarker = mMap.addMarker(new MarkerOptions().position(marker).title("Marker in Freddy Beach"));
