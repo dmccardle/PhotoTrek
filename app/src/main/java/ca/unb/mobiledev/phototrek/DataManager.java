@@ -218,6 +218,7 @@ public class DataManager extends SQLiteOpenHelper {
     }
 
     public boolean updatePhoto(Photo photo) {
+
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues cv = new ContentValues();
         cv.put(PhotoSchema.PHOTO_PATH_COLUMN, photo.getAbsolutePath());

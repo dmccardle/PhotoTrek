@@ -13,11 +13,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
 
-import com.google.android.gms.location.FusedLocationProviderClient;
-import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -81,16 +77,8 @@ public class SavePhotoActivity extends AppCompatActivity {
         String description = mTextDescription.getText().toString();
         String date = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
         Album album = dataManager.getAllAlbums().get(mSpinnerAlbums.getSelectedItemPosition());
-        //coords.latitude
         Photo photo = new Photo(mPhotoPath, coordinates, description, date, album.getId());
-        getLocation(photo);
-        while(photo.getCoordinates().latitude == 1.0){
-            Log.i("PHOTO", photo.getCoordinates().latitude + " ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~LOOP~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ " + photo.getCoordinates().longitude);
-            LatLng c = new LatLng(2.0,2.0);
-            photo.setCoordinates(c);
-        }
-        Log.i("PHOTO", photo.getCoordinates().latitude + " ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~LOOP~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ " + photo.getCoordinates().longitude);
-        dataManager.addPhoto(photo);
+        getLocationAndSavePhoto(photo);
 
         album.setCoverImagePosition(album.getPhotos().size());
         dataManager.updateAlbum(album);
@@ -98,7 +86,7 @@ public class SavePhotoActivity extends AppCompatActivity {
         return photo;
     }
 
-    private void getLocation(Photo photo){
+    private void getLocationAndSavePhoto(Photo photo){
         LocationFinder locationFinder = new LocationFinder(this, this);
         locationFinder.setPhotoLocation(photo, dataManager);
     }
