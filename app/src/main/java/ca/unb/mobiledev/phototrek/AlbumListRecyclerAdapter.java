@@ -10,8 +10,6 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.google.android.material.snackbar.Snackbar;
-
 import java.util.List;
 
 import androidx.core.widget.ImageViewCompat;
@@ -50,7 +48,7 @@ public class AlbumListRecyclerAdapter extends RecyclerView.Adapter<AlbumListRecy
             } else {
                 Bitmap thumbnail = BitmapUtils.decodeSampledBitmapFromResource(photoPath, 256, 256);
                 Bitmap resized = ThumbnailUtils.extractThumbnail(thumbnail, 256, 256);
-                ImageViewCompat.setImageTintList( holder.mCoverPhoto, null);
+                ImageViewCompat.setImageTintList(holder.mCoverPhoto, null);
                 holder.mCoverPhoto.setImageBitmap(resized);
             }
         }
@@ -77,8 +75,8 @@ public class AlbumListRecyclerAdapter extends RecyclerView.Adapter<AlbumListRecy
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent intent = new Intent(mContext, PhotoListActivity.class);
-                    intent.putExtra(PhotoListActivity.ALBUM_POSITION, mCurrentPosition);
+                    Intent intent = new Intent(mContext, AlbumPhotoViewActivity.class);
+                    intent.putExtra(AlbumPhotoViewActivity.ALBUM_POSITION, mCurrentPosition);
                     mContext.startActivity(intent);
                 }
             });

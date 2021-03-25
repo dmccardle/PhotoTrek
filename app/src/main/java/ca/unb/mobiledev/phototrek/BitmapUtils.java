@@ -72,7 +72,7 @@ public class BitmapUtils {
             int orientation = ei.getAttributeInt(ExifInterface.TAG_ORIENTATION,
                     ExifInterface.ORIENTATION_UNDEFINED);
 
-            switch(orientation) {
+            switch (orientation) {
                 case ExifInterface.ORIENTATION_ROTATE_90:
                     rotatedBitmap = rotateImage(thumbnail, 90);
                     break;
@@ -126,9 +126,8 @@ public class BitmapUtils {
                 ActivityCompat.requestPermissions((Activity) context, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
                 return false;
             }
-        }
-        else {
-            Log.v(TAG,"Permission is granted");
+        } else {
+            Log.v(TAG, "Permission is granted");
             return true;
         }
     }
@@ -151,7 +150,7 @@ public class BitmapUtils {
                 os.close();
 
                 MediaScannerConnection.scanFile(context,
-                        new String[] { file.toString() }, null,
+                        new String[]{file.toString()}, null,
                         new MediaScannerConnection.OnScanCompletedListener() {
                             public void onScanCompleted(String path, Uri uri) {
                                 Log.i("ExternalStorage", "Scanned " + path + ":");

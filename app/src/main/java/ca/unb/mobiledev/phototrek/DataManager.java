@@ -267,7 +267,7 @@ public class DataManager extends SQLiteOpenHelper {
                         PhotoSchema.PHOTO_DESCRIPTION_COLUMN + " TEXT," +
                         PhotoSchema.PHOTO_DATE_COLUMN + " TEXT," +
                         PhotoSchema.PHOTO_ALBUM_COLUMN + " INTEGER," +
-                        " FOREIGN KEY ("+ PhotoSchema.PHOTO_ALBUM_COLUMN + ") REFERENCES " + AlbumSchema.ALBUM_TABLE + "(" + AlbumSchema._ID + "))";
+                        " FOREIGN KEY (" + PhotoSchema.PHOTO_ALBUM_COLUMN + ") REFERENCES " + AlbumSchema.ALBUM_TABLE + "(" + AlbumSchema._ID + "))";
 
         public static final String SQL_DELETE_PHOTO_TABLE =
                 "DROP TABLE IF EXISTS " + PhotoSchema.PHOTO_TABLE;

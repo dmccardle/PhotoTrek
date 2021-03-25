@@ -19,6 +19,9 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.TextView;
+
+import org.w3c.dom.Text;
 
 import java.util.List;
 
@@ -46,7 +49,13 @@ public class AlbumListActivity extends AppCompatActivity {
         displayAlbums();
     }
 
-    private void addNewAlbum(){
+    @Override
+    protected void onRestart() {
+        this.refreshActivity();
+        super.onRestart();
+    }
+
+    private void addNewAlbum() {
         AlertDialog.Builder alert = new AlertDialog.Builder(new ContextThemeWrapper(this, R.style.AlbumCreationDialog));
         LayoutInflater inflater = this.getLayoutInflater();
         View dialogView = inflater.inflate(R.layout.dialog_album, null);
@@ -69,27 +78,36 @@ public class AlbumListActivity extends AppCompatActivity {
         alert.show();
     }
 
-    private void refreshActivity(){
+    private void refreshActivity() {
         Intent intent = getIntent();
         finish();
         startActivity(intent);
     }
 
     private void displayAlbums() {
-        RecyclerView mRecyclerAlbums = (RecyclerView) findViewById(R.id.album_list);
-        GridLayoutManager mAlbumLayoutManager = new GridLayoutManager(this, 2);
+        RecyclerView recyclerAlbums = (RecyclerView) findViewById(R.id.album_list);
+        TextView noAlbumsTextView = (TextView) findViewById(R.id.noAlbumsTextView);
+        GridLayoutManager albumLayoutManager = new GridLayoutManager(this, 2);
 
         List<Album> albums = dataManager.getAllAlbums();
-        AlbumListRecyclerAdapter mAlbumListRecyclerAdapter = new AlbumListRecyclerAdapter(this, albums);
+        if (albums.isEmpty()) {
+            recyclerAlbums.setVisibility(View.GONE);
+            noAlbumsTextView.setVisibility(View.VISIBLE);
+        } else {
+            recyclerAlbums.setVisibility(View.VISIBLE);
+            noAlbumsTextView.setVisibility(View.GONE);
+        }
 
-        mRecyclerAlbums.setLayoutManager(mAlbumLayoutManager);
-        mRecyclerAlbums.setAdapter(mAlbumListRecyclerAdapter);
+        AlbumListRecyclerAdapter albumListRecyclerAdapter = new AlbumListRecyclerAdapter(this, albums);
+
+        recyclerAlbums.setLayoutManager(albumLayoutManager);
+        recyclerAlbums.setAdapter(albumListRecyclerAdapter);
     }
 
-    // Uses the res/menu/menu_maps.xml resource to populate the actions.
+    // Uses the res/menu/menu_albums.xml resource to populate the actions.
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_album, menu);
+        getMenuInflater().inflate(R.menu.menu_albums, menu);
         return true;
     }
 

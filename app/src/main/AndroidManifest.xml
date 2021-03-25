@@ -33,7 +33,7 @@
             android:label="@string/title_activity_album"
             android:theme="@style/Theme.PhotoTrek.NoActionBar" />
         <activity
-            android:name=".PhotoListActivity"
+            android:name=".AlbumPhotoViewActivity"
             android:label="Photos"
             android:theme="@style/Theme.PhotoTrek.NoActionBar" />
         <activity
