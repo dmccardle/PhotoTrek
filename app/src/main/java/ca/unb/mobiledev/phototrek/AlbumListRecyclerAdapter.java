@@ -48,7 +48,7 @@ public class AlbumListRecyclerAdapter extends RecyclerView.Adapter<AlbumListRecy
             } else {
                 Bitmap thumbnail = BitmapUtils.decodeSampledBitmapFromResource(photoPath, 256, 256);
                 Bitmap resized = ThumbnailUtils.extractThumbnail(thumbnail, 256, 256);
-                ImageViewCompat.setImageTintList( holder.mCoverPhoto, null);
+                ImageViewCompat.setImageTintList(holder.mCoverPhoto, null);
                 holder.mCoverPhoto.setImageBitmap(resized);
             }
         }

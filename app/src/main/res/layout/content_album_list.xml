@@ -32,6 +32,4 @@
         app:layout_constraintTop_toTopOf="parent"
         tools:listitem="@layout/item_album" />
 
-
-
 </androidx.constraintlayout.widget.ConstraintLayout>

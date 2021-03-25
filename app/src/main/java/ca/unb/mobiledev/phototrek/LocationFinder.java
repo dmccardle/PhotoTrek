@@ -29,20 +29,20 @@ public class LocationFinder {
     private Context context;
     private Activity activity;
 
-    public LocationFinder(Context contextIn, Activity activityIn){
+    public LocationFinder(Context contextIn, Activity activityIn) {
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(contextIn);
         context = contextIn;
         activity = activityIn;
     }
 
-    public double[] getLocation(){
-        if(ActivityCompat.checkSelfPermission(context,
-                Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED){
+    public double[] getLocation() {
+        if (ActivityCompat.checkSelfPermission(context,
+                Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             fusedLocationProviderClient.getLastLocation().addOnCompleteListener(new OnCompleteListener<Location>() {
                 @Override
                 public void onComplete(@NonNull Task<Location> task) {
                     Location location = task.getResult();
-                    if(location != null){
+                    if (location != null) {
                         try {
                             Geocoder geocoder = new Geocoder(context, Locale.getDefault());
                             List<Address> addresses = geocoder.getFromLocation(
@@ -50,7 +50,7 @@ public class LocationFinder {
                             );
                             longitude = location.getLongitude();
                             latitude = location.getLatitude();
-                        } catch (IOException e){
+                        } catch (IOException e) {
                             e.printStackTrace();
                         }
                     }
@@ -63,14 +63,14 @@ public class LocationFinder {
         return new double[]{latitude, longitude};
     }
 
-    public void setPhotoLocation(Photo photo){
-        if(ActivityCompat.checkSelfPermission(context,
-                Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED){
+    public void setPhotoLocation(Photo photo) {
+        if (ActivityCompat.checkSelfPermission(context,
+                Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             fusedLocationProviderClient.getLastLocation().addOnCompleteListener(new OnCompleteListener<Location>() {
                 @Override
                 public void onComplete(@NonNull Task<Location> task) {
                     Location location = task.getResult();
-                    if(location != null){
+                    if (location != null) {
                         try {
                             Geocoder geocoder = new Geocoder(context, Locale.getDefault());
                             List<Address> addresses = geocoder.getFromLocation(
@@ -80,7 +80,7 @@ public class LocationFinder {
                             latitude = location.getLatitude();
                             LatLng latlong = new LatLng(latitude, longitude);
                             photo.setCoordinates(latlong);
-                        } catch (IOException e){
+                        } catch (IOException e) {
                             e.printStackTrace();
                         }
                     }
@@ -92,11 +92,11 @@ public class LocationFinder {
         }
     }
 
-    public double getLatitude(){
+    public double getLatitude() {
         return latitude;
     }
 
-    public double getLongitude(){
+    public double getLongitude() {
         return longitude;
     }
 

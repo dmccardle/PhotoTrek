@@ -126,7 +126,6 @@ public class AlbumPhotoViewActivity extends AppCompatActivity {
             public void onClick(DialogInterface dialog, int whichButton) {
                 dataManager.deleteAlbum(mAlbum);
                 finish();
-                // TODO: see if I can make the album list activity refresh after this closes
             }
         });
 

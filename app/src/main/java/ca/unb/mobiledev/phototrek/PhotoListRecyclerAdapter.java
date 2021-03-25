@@ -45,7 +45,7 @@ public class PhotoListRecyclerAdapter extends RecyclerView.Adapter<PhotoListRecy
         } else {
             Bitmap thumbnail = BitmapUtils.decodeSampledBitmapFromResource(photoPath, 128, 128);
             Bitmap resized = ThumbnailUtils.extractThumbnail(thumbnail, 128, 128);
-            ImageViewCompat.setImageTintList( holder.mPhoto, null);
+            ImageViewCompat.setImageTintList(holder.mPhoto, null);
             holder.mPhoto.setImageBitmap(resized);
         }
 

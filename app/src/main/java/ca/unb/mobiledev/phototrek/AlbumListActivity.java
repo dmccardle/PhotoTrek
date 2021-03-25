@@ -55,7 +55,7 @@ public class AlbumListActivity extends AppCompatActivity {
         super.onRestart();
     }
 
-    private void addNewAlbum(){
+    private void addNewAlbum() {
         AlertDialog.Builder alert = new AlertDialog.Builder(new ContextThemeWrapper(this, R.style.AlbumCreationDialog));
         LayoutInflater inflater = this.getLayoutInflater();
         View dialogView = inflater.inflate(R.layout.dialog_album, null);
@@ -93,8 +93,7 @@ public class AlbumListActivity extends AppCompatActivity {
         if (albums.isEmpty()) {
             recyclerAlbums.setVisibility(View.GONE);
             noAlbumsTextView.setVisibility(View.VISIBLE);
-        }
-        else {
+        } else {
             recyclerAlbums.setVisibility(View.VISIBLE);
             noAlbumsTextView.setVisibility(View.GONE);
         }

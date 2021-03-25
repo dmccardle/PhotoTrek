@@ -38,7 +38,6 @@ public class SavePhotoActivity extends AppCompatActivity {
 
         dataManager = new DataManager(this);
 
-        // TODO: add label for album dropdown
         mSpinnerAlbums = (Spinner) findViewById(R.id.spinner_albums);
         List<Album> albums = dataManager.getAllAlbums();
         ArrayAdapter<Album> adapterAlbums =
