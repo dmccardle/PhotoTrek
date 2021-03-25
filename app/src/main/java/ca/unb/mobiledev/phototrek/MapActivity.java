@@ -81,9 +81,9 @@ public class MapActivity extends AppCompatActivity {
                 mMap = googleMap;
 
                 List<Album> albums = dataManager.getAllAlbums();
-                for(Album album : albums) {
+                for (Album album : albums) {
                     List<Photo> photos = album.getPhotos();
-                    for(Photo photo : photos) {
+                    for (Photo photo : photos) {
                         // Add a marker in Fredericton and move the camera
                         LatLng marker = photo.getCoordinates();
                         mMap.addMarker(new MarkerOptions().position(marker).title("Marker in Freddy Beach"));

@@ -1,10 +1,14 @@
 package ca.unb.mobiledev.phototrek;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
+import android.widget.EditText;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -17,13 +21,14 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import java.io.File;
 import java.util.List;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.FileProvider;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-public class PhotoListActivity extends AppCompatActivity {
+public class AlbumPhotoViewActivity extends AppCompatActivity {
     public static final String ALBUM_POSITION = "ca.unb.mobiledev.phototrek.ALBUM_POSITION";
     private GridLayoutManager mPhotoLayoutManager;
     private PhotoListRecyclerAdapter mPhotoListRecyclerAdapter;
@@ -67,6 +72,78 @@ public class PhotoListActivity extends AppCompatActivity {
         mPhotoListRecyclerAdapter.notifyDataSetChanged();
     }
 
+    // Uses the res/menu/menu_albums.xml resource to populate the actions.
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_album_view, menu);
+        return true;
+    }
+
+    // Handles clicks on the menu
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if (id == R.id.action_edit_album) {
+            showEditAlbumAlert();
+        } else if (id == R.id.action_delete_album) {
+            showDeleteAlbumAlert();
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    private void showEditAlbumAlert() {
+        AlertDialog.Builder alert = new AlertDialog.Builder(this);
+
+        alert.setTitle("Name Album:");
+
+        final EditText input = new EditText(this);
+        input.setText(mAlbum.getTitle());
+        alert.setView(input);
+
+        alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {
+                mAlbum.setTitle(input.getText().toString());
+                dataManager.updateAlbum(mAlbum);
+                refreshActivity();
+            }
+        });
+
+        alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {
+                // Canceled.
+            }
+        });
+
+        alert.show();
+    }
+
+    private void showDeleteAlbumAlert() {
+        AlertDialog.Builder alert = new AlertDialog.Builder(this);
+
+        alert.setTitle("Are you sure you want to delete album '" + mAlbum.getTitle() + "'?");
+
+        alert.setPositiveButton("Delete", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {
+                dataManager.deleteAlbum(mAlbum);
+                finish();
+            }
+        });
+
+        alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {
+                // Canceled.
+            }
+        });
+
+        alert.show();
+    }
+
+    private void refreshActivity() {
+        Intent intent = getIntent();
+        finish();
+        startActivity(intent);
+    }
+
     private void setToolbarLabel() {
         getSupportActionBar().setTitle(mAlbum.getTitle());
     }
@@ -91,7 +168,7 @@ public class PhotoListActivity extends AppCompatActivity {
                 mMap = googleMap;
 
                 List<Photo> photos = mAlbum.getPhotos();
-                for(Photo photo : photos) {
+                for (Photo photo : photos) {
                     LatLng marker = photo.getCoordinates();
                     mMap.addMarker(new MarkerOptions().position(marker).title("Marker in Freddy Beach"));
                     mMap.moveCamera(CameraUpdateFactory.newLatLng(marker));
@@ -106,7 +183,7 @@ public class PhotoListActivity extends AppCompatActivity {
         if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
             // Create the File where the photo should go. The file will be internal to the application.
             mPhotoFile = null;
-            mPhotoFile = BitmapUtils.createImageFile(PhotoListActivity.this);
+            mPhotoFile = BitmapUtils.createImageFile(AlbumPhotoViewActivity.this);
 
             if (mPhotoFile != null) {
                 Uri photoURI = FileProvider.getUriForFile(this,
@@ -123,13 +200,13 @@ public class PhotoListActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
             // When the photo is taken successfully, create a copy in external storage, and launch the save photo form activity
-            BitmapUtils.createExternalStoragePublicPicture(PhotoListActivity.this, mPhotoFile);
+            BitmapUtils.createExternalStoragePublicPicture(AlbumPhotoViewActivity.this, mPhotoFile);
             savePhoto();
         }
     }
 
     private void savePhoto() {
-        Intent intent = new Intent(PhotoListActivity.this, SavePhotoActivity.class);
+        Intent intent = new Intent(AlbumPhotoViewActivity.this, SavePhotoActivity.class);
         intent.putExtra(SavePhotoActivity.PHOTO_PATH, mPhotoFile.getAbsolutePath());
         startActivity(intent);
     }

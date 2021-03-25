@@ -11,6 +11,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
@@ -51,8 +52,7 @@ public class SavePhotoActivity extends AppCompatActivity {
         mSaveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Photo photo = savePhoto();
-                getLocation(photo);
+                savePhoto();
             }
         });
         Button mCancelButton = (Button) findViewById(R.id.btn_cancel);
@@ -74,21 +74,26 @@ public class SavePhotoActivity extends AppCompatActivity {
         super.onPause();
     }
 
-    private Photo savePhoto(){
-        LatLng coordinates = new LatLng(0.0,0.0);
-        String description = mTextDescription.getText().toString();
-        String date = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-        Album album = dataManager.getAllAlbums().get(mSpinnerAlbums.getSelectedItemPosition());
-        Photo photo = new Photo(mPhotoPath, coordinates, description, date, album.getId());
-        dataManager.addPhoto(photo);
+    private void savePhoto() {
+        if (mSpinnerAlbums.getSelectedItem() == null) {
+            Toast toast = Toast.makeText(this, "Album is required", Toast.LENGTH_LONG);
+            toast.show();
+        } else {
+            LatLng coordinates = new LatLng(0.0, 0.0);
+            String description = mTextDescription.getText().toString();
+            String date = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+            Album album = dataManager.getAllAlbums().get(mSpinnerAlbums.getSelectedItemPosition());
+            Photo photo = new Photo(mPhotoPath, coordinates, description, date, album.getId());
+            getLocation(photo);
+            dataManager.addPhoto(photo);
 
-        album.setCoverImagePosition(album.getPhotos().size());
-        dataManager.updateAlbum(album);
-        finish();
-        return photo;
+            album.setCoverImagePosition(album.getPhotos().size());
+            dataManager.updateAlbum(album);
+            finish();
+        }
     }
 
-    private void getLocation(Photo photo){
+    private void getLocation(Photo photo) {
         LocationFinder locationFinder = new LocationFinder(this, this);
         locationFinder.setPhotoLocation(photo);
     }
