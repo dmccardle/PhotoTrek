@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -19,17 +20,20 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 
+import java.io.FileOutputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
 public class SavePhotoActivity extends AppCompatActivity {
     public static final String PHOTO_PATH = "ca.unb.mobiledev.phototrek.PHOTO_PATH";
+    public static final String THUMBNAIL_PATH = "ca.unb.mobiledev.phototrek.THUMBNAIL_PATH";
     private Spinner mSpinnerAlbums;
     private EditText mTextDescription;
     private String mPhotoPath;
+    private String mThumbnailPath;
     private DataManager dataManager;
-
+    private Bitmap mThumbnail;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,8 +69,10 @@ public class SavePhotoActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         mPhotoPath = intent.getStringExtra(PHOTO_PATH);
-        Bitmap thumbnail = BitmapUtils.decodeSampledBitmapFromResource(mPhotoPath, 128, 128);
-        mPhotoPreview.setImageBitmap(thumbnail);
+        mThumbnailPath = intent.getStringExtra(THUMBNAIL_PATH);
+
+        mThumbnail = BitmapFactory.decodeFile(mThumbnailPath);
+        mPhotoPreview.setImageBitmap(mThumbnail);
     }
 
     @Override
@@ -83,7 +89,7 @@ public class SavePhotoActivity extends AppCompatActivity {
             String description = mTextDescription.getText().toString();
             String date = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
             Album album = dataManager.getAllAlbums().get(mSpinnerAlbums.getSelectedItemPosition());
-            Photo photo = new Photo(mPhotoPath, coordinates, description, date, album.getId());
+            Photo photo = new Photo(mPhotoPath, coordinates, description, date, album.getId(), mThumbnailPath);
             getLocation(photo);
             dataManager.addPhoto(photo);
 

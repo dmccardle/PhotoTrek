@@ -2,6 +2,7 @@ package ca.unb.mobiledev.phototrek;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.view.LayoutInflater;
@@ -39,14 +40,14 @@ public class PhotoListRecyclerAdapter extends RecyclerView.Adapter<PhotoListRecy
     public void onBindViewHolder(ViewHolder holder, int position) {
         Photo photo = mPhotos.get(position);
         String photoPath = photo.getAbsolutePath();
+        String thumbnailPath = photo.getThumbnailPath();
 
         if (photoPath == null) {
             holder.mPhoto.setImageResource(R.drawable.ic_photo_placeholder);
         } else {
-            Bitmap thumbnail = BitmapUtils.decodeSampledBitmapFromResource(photoPath, 128, 128);
-            Bitmap resized = ThumbnailUtils.extractThumbnail(thumbnail, 128, 128);
             ImageViewCompat.setImageTintList(holder.mPhoto, null);
-            holder.mPhoto.setImageBitmap(resized);
+            Bitmap thumbnail = BitmapFactory.decodeFile(thumbnailPath); // 128
+            holder.mPhoto.setImageBitmap(thumbnail);
         }
 
         holder.mCurrentPosition = position;
