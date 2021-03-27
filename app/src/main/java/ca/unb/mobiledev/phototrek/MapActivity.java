@@ -1,6 +1,7 @@
 package ca.unb.mobiledev.phototrek;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 
@@ -23,6 +24,7 @@ import android.view.View;
 
 import java.io.File;
 import java.util.List;
+import java.util.Map;
 
 public class MapActivity extends AppCompatActivity {
     static final int REQUEST_IMAGE_CAPTURE = 10;
@@ -116,15 +118,22 @@ public class MapActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
-            // When the photo is taken successfully, create a copy in external storage, and launch the save photo form activity
-            BitmapUtils.createExternalStoragePublicPicture(MapActivity.this, mPhotoFile);
-            savePhoto();
+            // When the photo is taken successfully, create a copy in shared external storage, create a thumbnail in external storage, and launch the save photo form activity
+            Bitmap thumbnailSource = BitmapUtils.decodeSampledBitmapFromResource(mPhotoFile.getAbsolutePath(), 256, 256);
+            File thumbnail = BitmapUtils.createThumbnailInStorage(MapActivity.this, thumbnailSource);
+            File photo = BitmapUtils.createExternalStoragePublicPicture(MapActivity.this, mPhotoFile);
+
+            // Delete original file stored in the external storage, keep the photo in the shared external storage
+            mPhotoFile.delete();
+            mPhotoFile = photo;
+            savePhoto(thumbnail);
         }
     }
 
-    private void savePhoto() {
+    private void savePhoto(File thumbnail) {
         Intent intent = new Intent(MapActivity.this, SavePhotoActivity.class);
         intent.putExtra(SavePhotoActivity.PHOTO_PATH, mPhotoFile.getAbsolutePath());
+        intent.putExtra(SavePhotoActivity.THUMBNAIL_PATH, thumbnail.getAbsolutePath());
         startActivity(intent);
     }
 }

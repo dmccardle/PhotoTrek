@@ -8,11 +8,13 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.media.MediaScannerConnection;
+import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
 import android.util.Log;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -27,6 +29,8 @@ import androidx.exifinterface.media.ExifInterface;
 
 // Source https://developer.android.com/topic/performance/graphics/load-bitmap?hl=en
 public class BitmapUtils {
+    private final static String TAG = "BitmapUtils";
+
     public static int calculateInSampleSize(
             BitmapFactory.Options options, int reqWidth, int reqHeight) {
         // Raw height and width of image
@@ -89,7 +93,8 @@ public class BitmapUtils {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return rotatedBitmap;
+        Bitmap resized = ThumbnailUtils.extractThumbnail(thumbnail, reqWidth, reqHeight);
+        return resized;
     }
 
     // Reference: https://stackoverflow.com/questions/14066038/why-does-an-image-captured-using-camera-intent-gets-rotated-on-some-devices-on-a
@@ -100,10 +105,26 @@ public class BitmapUtils {
                 matrix, true);
     }
 
+    public static File getStorageDirectory(Context context) {
+        File storageDir = context.getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        if (!storageDir.mkdirs()) {
+            Log.e(TAG, "Error creating directory.");
+        }
+        return storageDir;
+    }
+
+    public static File getSharedStorageDirectory() {
+        File storageDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
+        if (!storageDir.mkdirs()) {
+            Log.e(TAG, "Error creating shared directory.");
+        }
+        return storageDir;
+    }
+
     public static File createImageFile(Context context) {
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
         String imageFileName = "JPEG_" + timeStamp + "_";
-        File storageDir = context.getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        File storageDir = getStorageDirectory(context);
 
         File image = null;
         try {
@@ -132,13 +153,29 @@ public class BitmapUtils {
         }
     }
 
-    public static void createExternalStoragePublicPicture(Context context, File originalFile) {
+    public static File createThumbnailInStorage(Context context, Bitmap bitmap) {
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        String imageFileName = "JPEG_" + timeStamp + "_.jpg";
+        File file = new File(getStorageDirectory(context), imageFileName);
+        try {
+            Bitmap newBitmap = bitmap;
+            ByteArrayOutputStream bos = new ByteArrayOutputStream();
+            newBitmap.compress(Bitmap.CompressFormat.JPEG, 100, bos);
+            byte[] bitmapData = bos.toByteArray();
+            FileOutputStream fos = new FileOutputStream(file);
+            fos.write(bitmapData);
+            fos.flush();
+            fos.close();
+        } catch (IOException e) {
+
+        }
+        return file;
+    }
+
+    public static File createExternalStoragePublicPicture(Context context, File originalFile) {
         if (isStoragePermissionGranted(context)) {
-            File path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
+            File path = getSharedStorageDirectory();
             try {
-                if (!path.exists()) {
-                    path.mkdirs();
-                }
                 File file = new File(path.toString(), originalFile.getName());
                 file.createNewFile();
                 InputStream is = new FileInputStream(originalFile);
@@ -157,9 +194,12 @@ public class BitmapUtils {
                                 Log.i("ExternalStorage", "-> uri=" + uri);
                             }
                         });
+
+                return file;
             } catch (IOException e) {
                 Log.w("ExternalStorage", "Error writing", e);
             }
         }
+        return null;
     }
 }

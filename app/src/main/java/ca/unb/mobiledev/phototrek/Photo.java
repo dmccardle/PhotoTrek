@@ -9,24 +9,27 @@ public class Photo {
     private String mDescription;
     private final String mDate;
     private Integer mAlbumId;
+    private final String mThumbnailPath;
 
     // Used in creating photos
-    public Photo(String absolutePath, LatLng coordinates, String description, String date, int albumId) {
+    public Photo(String absolutePath, LatLng coordinates, String description, String date, int albumId, String thumbnailPath) {
         this.mAbsolutePath = absolutePath;
         this.mCoordinates = coordinates;
         this.mDescription = description;
         this.mDate = date;
         this.mAlbumId = albumId;
+        this.mThumbnailPath = thumbnailPath;
     }
 
     // Used in restoring photos from the database
-    public Photo(int id, String absolutePath, LatLng coordinates, String description, String date, int albumId) {
+    public Photo(int id, String absolutePath, LatLng coordinates, String description, String date, int albumId, String thumbnailPath) {
         this.mId = id;
         this.mAbsolutePath = absolutePath;
         this.mCoordinates = coordinates;
         this.mDescription = description;
         this.mDate = date;
         this.mAlbumId = albumId;
+        this.mThumbnailPath = thumbnailPath;
     }
 
     public int getId() {
@@ -68,4 +71,6 @@ public class Photo {
     public void setAlbumId(Integer albumId) {
         this.mAlbumId = albumId;
     }
+
+    public String getThumbnailPath() { return mThumbnailPath; }
 }
