@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/dateTextLabel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="16dp"
+            android:text="Date" />
+
+        <TextView
+            android:id="@+id/dateTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="2021-03-28" />
+
+        <TextView
+            android:id="@+id/locationTextLabel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="16dp"
+            android:text="Location" />
+
+        <TextView
+            android:id="@+id/locationTextViiew"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="10.0, 11.0" />
+
+        <TextView
+            android:id="@+id/descriptionTextLabel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="16dp"
+            android:text="Description" />
+
+        <TextView
+            android:id="@+id/descriptionTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum." />
+    </LinearLayout>
+</ScrollView>

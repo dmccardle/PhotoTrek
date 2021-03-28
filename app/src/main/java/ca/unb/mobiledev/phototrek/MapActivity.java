@@ -1,5 +1,6 @@
 package ca.unb.mobiledev.phototrek;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -50,6 +51,8 @@ public class MapActivity extends AppCompatActivity {
             }
         });
         initializeMap();
+
+        BitmapUtils.isStoragePermissionGranted(this);
     }
 
     // Uses the res/menu/menu_maps.xml resource to populate the actions.
@@ -134,6 +137,8 @@ public class MapActivity extends AppCompatActivity {
         Intent intent = new Intent(MapActivity.this, SavePhotoActivity.class);
         intent.putExtra(SavePhotoActivity.PHOTO_PATH, mPhotoFile.getAbsolutePath());
         intent.putExtra(SavePhotoActivity.THUMBNAIL_PATH, thumbnail.getAbsolutePath());
+        intent.putExtra(SavePhotoActivity.ALBUM,0);
+        intent.putExtra(SavePhotoActivity.TYPE, "ADD");
         startActivity(intent);
     }
 }

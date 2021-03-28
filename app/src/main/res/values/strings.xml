@@ -3,6 +3,8 @@
     <string name="title_activity_maps">Map</string>
     <string name="title_activity_main">MainActivity</string>
     <string name="title_activity_album">Albums</string>
+    <string name="title_activity_photoView_edit">Edit Photo</string>
+    <string name="title_activity_photoView_new">Add Photo</string>
     <string name="text_album_name_placeholder">TextView</string>
     <string name="icon_text_map">Map View</string>
     <string name="icon_edit_album">Edit Album</string>
@@ -15,4 +17,5 @@
     <string name="text_album_title">Album Title</string>
     <string name="album_name">Album Name</string>
     <string name="text_no_albums">No albums found</string>
+    <string name="title_activity_fullscreen_photo">Photo</string>
 </resources>
