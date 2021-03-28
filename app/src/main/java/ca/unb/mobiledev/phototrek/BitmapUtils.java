@@ -135,7 +135,7 @@ public class BitmapUtils {
         return image;
     }
 
-    private static boolean isStoragePermissionGranted(Context context) {
+    public static boolean isStoragePermissionGranted(Context context) {
         String TAG = "Storage Permission";
         if (Build.VERSION.SDK_INT >= 23) {
             if (context.checkSelfPermission(android.Manifest.permission.WRITE_EXTERNAL_STORAGE)

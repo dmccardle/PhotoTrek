@@ -1,6 +1,7 @@
 package ca.unb.mobiledev.phototrek;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.ThumbnailUtils;
@@ -69,15 +70,13 @@ public class PhotoListRecyclerAdapter extends RecyclerView.Adapter<PhotoListRecy
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    Photo photo = mPhotos.get(mCurrentPosition);
+                    Intent intent = new Intent(mContext, ViewPhotoActivity.class);
+                    intent.putExtra(ViewPhotoActivity.PHOTO_POSITION, mCurrentPosition);
+                    intent.putExtra(ViewPhotoActivity.ALBUMID, photo.getAlbumId());
+                    mContext.startActivity(intent);
                 }
             });
         }
     }
 }
-
-
-
-
-
-
-

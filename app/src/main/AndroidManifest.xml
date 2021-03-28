@@ -1,11 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="ca.unb.mobiledev.phototrek">
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
-    <uses-feature android:name="android.hardware.camera" android:required="true" />
 
     <application
         android:allowBackup="true"
@@ -14,7 +9,19 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.PhotoTrek">
-        <activity android:name=".SavePhotoActivity"></activity>
+        <activity
+            android:name=".FullscreenPhotoActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:label="@string/title_activity_fullscreen_photo"
+            android:theme="@style/Theme.PhotoTrek.Fullscreen"></activity>
+        <activity
+            android:name=".SavePhotoActivity"
+            android:label="New Photo"
+            android:theme="@style/Theme.PhotoTrek.NoActionBar" />
+        <activity
+            android:name=".ViewPhotoActivity"
+            android:label="New Photo"
+            android:theme="@style/Theme.PhotoTrek.NoActionBar" />
         <activity
             android:name=".AlbumListActivity"
             android:label="@string/title_activity_album"
@@ -29,6 +36,7 @@
             android:theme="@style/Theme.PhotoTrek.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -54,4 +62,12 @@
                 android:resource="@xml/file_paths" />
         </provider>
     </application>
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="true" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+
 </manifest>

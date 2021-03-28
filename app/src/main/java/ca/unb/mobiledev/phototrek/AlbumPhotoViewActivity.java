@@ -216,6 +216,8 @@ public class AlbumPhotoViewActivity extends AppCompatActivity {
         Intent intent = new Intent(AlbumPhotoViewActivity.this, SavePhotoActivity.class);
         intent.putExtra(SavePhotoActivity.PHOTO_PATH, mPhotoFile.getAbsolutePath());
         intent.putExtra(SavePhotoActivity.THUMBNAIL_PATH, thumbnail.getAbsolutePath());
+        intent.putExtra(SavePhotoActivity.ALBUM, mAlbum.getId());
+        intent.putExtra(SavePhotoActivity.TYPE, "ADD");
         startActivity(intent);
     }
 }
