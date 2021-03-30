@@ -1,8 +1,11 @@
 package ca.unb.mobiledev.phototrek;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
 
@@ -13,10 +16,14 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.ActivityCompat;
 import androidx.core.content.FileProvider;
 
 import android.provider.MediaStore;
@@ -36,6 +43,10 @@ public class MapActivity extends AppCompatActivity {
     private Context mContext;
     private static File mPhotoFile;
     private DataManager dataManager;
+    final private String[] PERMISSIONS = {
+            android.Manifest.permission.WRITE_EXTERNAL_STORAGE,
+            Manifest.permission.ACCESS_FINE_LOCATION
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,7 +67,10 @@ public class MapActivity extends AppCompatActivity {
         });
         initializeMap();
 
-        BitmapUtils.isStoragePermissionGranted(this);
+        int PERMISSION_ALL = 1;
+        if (!hasPermissions(this, PERMISSIONS)) {
+            ActivityCompat.requestPermissions(this, PERMISSIONS, PERMISSION_ALL);
+        }
     }
 
     // Uses the res/menu/menu_maps.xml resource to populate the actions.
@@ -158,5 +172,16 @@ public class MapActivity extends AppCompatActivity {
         intent.putExtra(SavePhotoActivity.ALBUM,0);
         intent.putExtra(SavePhotoActivity.TYPE, "ADD");
         startActivity(intent);
+    }
+
+    public static boolean hasPermissions(Context context, String... permissions) {
+        if (context != null && permissions != null) {
+            for (String permission : permissions) {
+                if (ActivityCompat.checkSelfPermission(context, permission) != PackageManager.PERMISSION_GRANTED) {
+                    return false;
+                }
+            }
+        }
+        return true;
     }
 }
