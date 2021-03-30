@@ -49,6 +49,7 @@ public class AlbumPhotoViewActivity extends AppCompatActivity {
     private Album mAlbum;
     private GoogleMap mMap;
     static final int REQUEST_IMAGE_CAPTURE = 10;
+    static final int SAVE_PHOTO = 11;
     private static String mCurrentPhotoPath;
     private Context mContext;
     private static File mPhotoFile;
@@ -188,6 +189,7 @@ public class AlbumPhotoViewActivity extends AppCompatActivity {
                     Marker mMarker;
                     mMarker = mMap.addMarker(new MarkerOptions().position(marker).title("Marker in Freddy Beach"));
                     mMarker.setTag(photo);
+                    mMarker.setPosition(photo.getCoordinates());
                     mMap.moveCamera(CameraUpdateFactory.newLatLng(marker));
                     mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
                         @Override
@@ -237,6 +239,10 @@ public class AlbumPhotoViewActivity extends AppCompatActivity {
             mPhotoFile = photo;
             savePhoto(thumbnail);
         }
+
+        if (requestCode == SAVE_PHOTO) {
+            initializeMap();
+        }
     }
 
     private void savePhoto(File thumbnail) {
@@ -245,6 +251,6 @@ public class AlbumPhotoViewActivity extends AppCompatActivity {
         intent.putExtra(SavePhotoActivity.THUMBNAIL_PATH, thumbnail.getAbsolutePath());
         intent.putExtra(SavePhotoActivity.ALBUM, mAlbum.getId());
         intent.putExtra(SavePhotoActivity.TYPE, "ADD");
-        startActivity(intent);
+        startActivityForResult(intent, SAVE_PHOTO);
     }
 }

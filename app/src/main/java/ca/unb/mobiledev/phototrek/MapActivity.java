@@ -20,6 +20,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.FileProvider;
 
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -30,6 +31,7 @@ import java.util.Map;
 
 public class MapActivity extends AppCompatActivity {
     static final int REQUEST_IMAGE_CAPTURE = 10;
+    static final int SAVE_PHOTO = 11;
     private static final String APP_TAG = "PhotoTrek";
     private GoogleMap mMap;
     private static String mCurrentPhotoPath;
@@ -88,7 +90,7 @@ public class MapActivity extends AppCompatActivity {
             @Override
             public void onMapReady(GoogleMap googleMap) {
                 mMap = googleMap;
-
+                Log.d("YOLO WFT", "AFFF");
                 List<Album> albums = dataManager.getAllAlbums();
                 for (Album album : albums) {
                     List<Photo> photos = album.getPhotos();
@@ -99,6 +101,7 @@ public class MapActivity extends AppCompatActivity {
                         Marker mMarker;
                         mMarker = mMap.addMarker(new MarkerOptions().position(marker).title("Marker in Freddy Beach"));
                         mMarker.setTag(photo);
+                        mMarker.setPosition(photo.getCoordinates());
                         mMap.moveCamera(CameraUpdateFactory.newLatLng(marker));
                         mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
                             @Override
@@ -149,6 +152,10 @@ public class MapActivity extends AppCompatActivity {
             mPhotoFile = photo;
             savePhoto(thumbnail);
         }
+
+        if (requestCode == SAVE_PHOTO) {
+            initializeMap();
+        }
     }
 
     private void savePhoto(File thumbnail) {
@@ -157,6 +164,6 @@ public class MapActivity extends AppCompatActivity {
         intent.putExtra(SavePhotoActivity.THUMBNAIL_PATH, thumbnail.getAbsolutePath());
         intent.putExtra(SavePhotoActivity.ALBUM,0);
         intent.putExtra(SavePhotoActivity.TYPE, "ADD");
-        startActivity(intent);
+        startActivityForResult(intent, SAVE_PHOTO);
     }
 }
