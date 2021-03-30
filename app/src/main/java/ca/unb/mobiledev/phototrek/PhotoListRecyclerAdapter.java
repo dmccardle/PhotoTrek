@@ -14,6 +14,7 @@ import android.widget.TextView;
 
 import com.google.android.material.snackbar.Snackbar;
 
+import java.io.ByteArrayOutputStream;
 import java.util.List;
 
 import androidx.core.widget.ImageViewCompat;
@@ -52,6 +53,7 @@ public class PhotoListRecyclerAdapter extends RecyclerView.Adapter<PhotoListRecy
         }
 
         holder.mCurrentPosition = position;
+        holder.mPhotos = mPhotos;
     }
 
     @Override
@@ -62,6 +64,7 @@ public class PhotoListRecyclerAdapter extends RecyclerView.Adapter<PhotoListRecy
     public class ViewHolder extends RecyclerView.ViewHolder {
         public final ImageView mPhoto;
         public int mCurrentPosition;
+        public List<Photo> mPhotos;
 
         public ViewHolder(View itemView) {
             super(itemView);

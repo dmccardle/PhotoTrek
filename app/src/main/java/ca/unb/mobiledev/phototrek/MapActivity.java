@@ -11,6 +11,7 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -31,6 +32,8 @@ public class MapActivity extends AppCompatActivity {
     static final int REQUEST_IMAGE_CAPTURE = 10;
     private static final String APP_TAG = "PhotoTrek";
     private GoogleMap mMap;
+    private static String mCurrentPhotoPath;
+    private Context mContext;
     private static File mPhotoFile;
     private DataManager dataManager;
 
@@ -40,6 +43,7 @@ public class MapActivity extends AppCompatActivity {
         setContentView(R.layout.activity_maps);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        mContext = this;
 
         dataManager = new DataManager(this);
 
@@ -89,10 +93,22 @@ public class MapActivity extends AppCompatActivity {
                 for (Album album : albums) {
                     List<Photo> photos = album.getPhotos();
                     for (Photo photo : photos) {
-                        // Add a marker in Fredericton and move the camera
                         LatLng marker = photo.getCoordinates();
-                        mMap.addMarker(new MarkerOptions().position(marker).title("Marker in Freddy Beach"));
+                        Marker mMarker;
+                        mMarker = mMap.addMarker(new MarkerOptions().position(marker).title("Marker in Freddy Beach"));
+                        mMarker.setTag(photo);
                         mMap.moveCamera(CameraUpdateFactory.newLatLng(marker));
+                        mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+                            @Override
+                            public boolean onMarkerClick(Marker marker) {
+                                Photo photo = (Photo) marker.getTag();
+                                Intent intent = new Intent(mContext, PhotoViewActivity.class);
+                                intent.putExtra("path", photo.getAbsolutePath());
+                                intent.putExtra("Description", photo.getDescription());
+                                mContext.startActivity(intent);
+                                return true;
+                            }
+                        });
                     }
                 }
             }

@@ -1,13 +1,19 @@
 package ca.unb.mobiledev.phototrek;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
+
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.util.Log;
+
 import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
+
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -17,7 +23,9 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -31,7 +39,9 @@ import androidx.core.content.FileProvider;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+
 public class AlbumPhotoViewActivity extends AppCompatActivity {
+	
     public static final String ALBUM_POSITION = "ca.unb.mobiledev.phototrek.ALBUM_POSITION";
     private GridLayoutManager mPhotoLayoutManager;
     private PhotoListRecyclerAdapter mPhotoListRecyclerAdapter;
@@ -39,6 +49,8 @@ public class AlbumPhotoViewActivity extends AppCompatActivity {
     private Album mAlbum;
     private GoogleMap mMap;
     static final int REQUEST_IMAGE_CAPTURE = 10;
+    private static String mCurrentPhotoPath;
+    private Context mContext;
     private static File mPhotoFile;
     private DataManager dataManager;
 
@@ -49,6 +61,7 @@ public class AlbumPhotoViewActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        mContext = this;
         dataManager = new DataManager(this);
 
         FloatingActionButton fab = findViewById(R.id.fab_new_photo);
@@ -167,12 +180,25 @@ public class AlbumPhotoViewActivity extends AppCompatActivity {
             @Override
             public void onMapReady(GoogleMap googleMap) {
                 mMap = googleMap;
+                Marker mMarker;
 
                 List<Photo> photos = mAlbum.getPhotos();
-                for (Photo photo : photos) {
-                    LatLng marker = photo.getCoordinates();
-                    mMap.addMarker(new MarkerOptions().position(marker).title("Marker in Freddy Beach"));
-                    mMap.moveCamera(CameraUpdateFactory.newLatLng(marker));
+                for(Photo photo : photos) {
+                    LatLng markerCoor = photo.getCoordinates();
+                    mMarker = mMap.addMarker(new MarkerOptions().position(markerCoor).title("Marker in Freddy Beach"));
+                    mMarker.setTag(photo);
+                    mMap.moveCamera(CameraUpdateFactory.newLatLng(markerCoor));
+                    mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+                        @Override
+                        public boolean onMarkerClick(Marker marker) {
+                            Photo photo = (Photo) marker.getTag();
+                            Intent intent = new Intent(mContext, PhotoViewActivity.class);
+                            intent.putExtra("path", photo.getAbsolutePath());
+                            intent.putExtra("Description", photo.getDescription());
+                            mContext.startActivity(intent);
+                            return true;
+                        }
+                    });
                 }
             }
         });

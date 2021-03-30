@@ -10,10 +10,14 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
+
+import android.util.Log;
+
 import android.view.ContextThemeWrapper;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
+
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
@@ -26,6 +30,7 @@ import android.widget.Toast;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -192,17 +197,22 @@ public class SavePhotoActivity extends AppCompatActivity {
             Toast toast = Toast.makeText(this, "Album is required", Toast.LENGTH_LONG);
             toast.show();
         } else {
-            LatLng coordinates = new LatLng(0.0, 0.0);
+            LatLng coordinates = new LatLng(1.0,1.0);
             String description = mTextDescription.getText().toString();
             String date = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
             Album album = dataManager.getAllAlbums().get(mSpinnerAlbums.getSelectedItemPosition());
             Photo photo = new Photo(mPhotoPath, coordinates, description, date, album.getId(), mThumbnailPath);
-            getLocation(photo);
-            dataManager.addPhoto(photo);
+            getLocationAndSavePhoto(photo);
 
             album.setCoverImagePosition(album.getPhotos().size());
             dataManager.updateAlbum(album);
             finish();
+        }
+    }
+
+    private void getLocationAndSavePhoto(Photo photo) {
+        LocationFinder locationFinder = new LocationFinder(this, this);
+        locationFinder.setPhotoLocation(photo, dataManager);
         }
     }
 
@@ -229,11 +239,6 @@ public class SavePhotoActivity extends AppCompatActivity {
 
             finish();
         }
-    }
-
-    private void getLocation(Photo photo) {
-        LocationFinder locationFinder = new LocationFinder(this, this);
-        locationFinder.setPhotoLocation(photo);
     }
 
     private void hideKeyboard() {
