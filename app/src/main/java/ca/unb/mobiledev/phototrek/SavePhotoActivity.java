@@ -213,7 +213,6 @@ public class SavePhotoActivity extends AppCompatActivity {
     private void getLocationAndSavePhoto(Photo photo) {
         LocationFinder locationFinder = new LocationFinder(this, this);
         locationFinder.setPhotoLocation(photo, dataManager);
-        }
     }
 
     private void editPhoto() {

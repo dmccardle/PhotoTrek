@@ -92,7 +92,9 @@ public class MapActivity extends AppCompatActivity {
                 List<Album> albums = dataManager.getAllAlbums();
                 for (Album album : albums) {
                     List<Photo> photos = album.getPhotos();
-                    for (Photo photo : photos) {
+                    for (int i = 0; i < photos.size(); i++) {
+                        final int position = i;
+                        Photo photo = photos.get(i);
                         LatLng marker = photo.getCoordinates();
                         Marker mMarker;
                         mMarker = mMap.addMarker(new MarkerOptions().position(marker).title("Marker in Freddy Beach"));
@@ -102,9 +104,9 @@ public class MapActivity extends AppCompatActivity {
                             @Override
                             public boolean onMarkerClick(Marker marker) {
                                 Photo photo = (Photo) marker.getTag();
-                                Intent intent = new Intent(mContext, PhotoViewActivity.class);
-                                intent.putExtra("path", photo.getAbsolutePath());
-                                intent.putExtra("Description", photo.getDescription());
+                                Intent intent = new Intent(mContext, ViewPhotoActivity.class);
+                                intent.putExtra(ViewPhotoActivity.PHOTO_POSITION, position);
+                                intent.putExtra(ViewPhotoActivity.ALBUMID, photo.getAlbumId());
                                 mContext.startActivity(intent);
                                 return true;
                             }

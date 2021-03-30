@@ -192,7 +192,7 @@ public class AlbumPhotoViewActivity extends AppCompatActivity {
                         @Override
                         public boolean onMarkerClick(Marker marker) {
                             Photo photo = (Photo) marker.getTag();
-                            Intent intent = new Intent(mContext, PhotoViewActivity.class);
+                            Intent intent = new Intent(mContext, ViewPhotoActivity.class);
                             intent.putExtra("path", photo.getAbsolutePath());
                             intent.putExtra("Description", photo.getDescription());
                             mContext.startActivity(intent);
