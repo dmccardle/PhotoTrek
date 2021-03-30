@@ -20,7 +20,7 @@ public class DataManager extends SQLiteOpenHelper {
     private final String TAG = "DataManager";
 
     public DataManager(@Nullable Context context) {
-        super(context, "database.db", null, 2);
+        super(context, "database.db", null, 3);
     }
 
     @Override

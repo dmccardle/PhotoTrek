@@ -180,21 +180,22 @@ public class AlbumPhotoViewActivity extends AppCompatActivity {
             @Override
             public void onMapReady(GoogleMap googleMap) {
                 mMap = googleMap;
-                Marker mMarker;
-
                 List<Photo> photos = mAlbum.getPhotos();
-                for(Photo photo : photos) {
-                    LatLng markerCoor = photo.getCoordinates();
-                    mMarker = mMap.addMarker(new MarkerOptions().position(markerCoor).title("Marker in Freddy Beach"));
+                for (int i = 0; i < photos.size(); i++) {
+                    final int position = i;
+                    Photo photo = photos.get(i);
+                    LatLng marker = photo.getCoordinates();
+                    Marker mMarker;
+                    mMarker = mMap.addMarker(new MarkerOptions().position(marker).title("Marker in Freddy Beach"));
                     mMarker.setTag(photo);
-                    mMap.moveCamera(CameraUpdateFactory.newLatLng(markerCoor));
+                    mMap.moveCamera(CameraUpdateFactory.newLatLng(marker));
                     mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
                         @Override
                         public boolean onMarkerClick(Marker marker) {
                             Photo photo = (Photo) marker.getTag();
                             Intent intent = new Intent(mContext, ViewPhotoActivity.class);
-                            intent.putExtra("path", photo.getAbsolutePath());
-                            intent.putExtra("Description", photo.getDescription());
+                            intent.putExtra(ViewPhotoActivity.PHOTO_POSITION, position);
+                            intent.putExtra(ViewPhotoActivity.ALBUMID, photo.getAlbumId());
                             mContext.startActivity(intent);
                             return true;
                         }
