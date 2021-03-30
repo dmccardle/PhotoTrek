@@ -42,14 +42,14 @@ public class PhotoListRecyclerAdapter extends RecyclerView.Adapter<PhotoListRecy
     public void onBindViewHolder(ViewHolder holder, int position) {
         Photo photo = mPhotos.get(position);
         String photoPath = photo.getAbsolutePath();
+        String thumbnailPath = photo.getThumbnailPath();
 
         if (photoPath == null) {
             holder.mPhoto.setImageResource(R.drawable.ic_photo_placeholder);
         } else {
-            Bitmap thumbnail = BitmapUtils.decodeSampledBitmapFromResource(photoPath, 128, 128);
-            Bitmap resized = ThumbnailUtils.extractThumbnail(thumbnail, 128, 128);
             ImageViewCompat.setImageTintList(holder.mPhoto, null);
-            holder.mPhoto.setImageBitmap(resized);
+            Bitmap thumbnail = BitmapFactory.decodeFile(thumbnailPath); // 128
+            holder.mPhoto.setImageBitmap(thumbnail);
         }
 
         holder.mCurrentPosition = position;
@@ -73,19 +73,13 @@ public class PhotoListRecyclerAdapter extends RecyclerView.Adapter<PhotoListRecy
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent intent = new Intent(mContext, PhotoViewActivity.class);
-                    intent.putExtra("path", mPhotos.get(mCurrentPosition).getAbsolutePath());
-                    intent.putExtra("Description", mPhotos.get(mCurrentPosition).getDescription());
+                    Photo photo = mPhotos.get(mCurrentPosition);
+                    Intent intent = new Intent(mContext, ViewPhotoActivity.class);
+                    intent.putExtra(ViewPhotoActivity.PHOTO_POSITION, mCurrentPosition);
+                    intent.putExtra(ViewPhotoActivity.ALBUMID, photo.getAlbumId());
                     mContext.startActivity(intent);
                 }
             });
         }
     }
 }
-
-
-
-
-
-
-

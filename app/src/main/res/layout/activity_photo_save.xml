@@ -23,6 +23,6 @@
 
     <include
         android:id="@+id/include2"
-        layout="@layout/content_photo_view" />
+        layout="@layout/content_photo_save" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

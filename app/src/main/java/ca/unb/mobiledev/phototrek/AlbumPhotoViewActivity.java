@@ -4,11 +4,16 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
+
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Log;
+
+import android.view.ContextThemeWrapper;
+import android.view.LayoutInflater;
+
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -103,14 +108,12 @@ public class AlbumPhotoViewActivity extends AppCompatActivity {
     }
 
     private void showEditAlbumAlert() {
-        AlertDialog.Builder alert = new AlertDialog.Builder(this);
-
-        alert.setTitle("Name Album:");
-
-        final EditText input = new EditText(this);
+        AlertDialog.Builder alert = new AlertDialog.Builder(new ContextThemeWrapper(this, R.style.AlbumCreationDialog));
+        LayoutInflater inflater = this.getLayoutInflater();
+        View dialogView = inflater.inflate(R.layout.dialog_album, null);
+        EditText input = dialogView.findViewById(R.id.txtAlbumName);
         input.setText(mAlbum.getTitle());
-        alert.setView(input);
-
+        alert.setView(dialogView);
         alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int whichButton) {
                 mAlbum.setTitle(input.getText().toString());
@@ -129,7 +132,7 @@ public class AlbumPhotoViewActivity extends AppCompatActivity {
     }
 
     private void showDeleteAlbumAlert() {
-        AlertDialog.Builder alert = new AlertDialog.Builder(this);
+        AlertDialog.Builder alert = new AlertDialog.Builder(new ContextThemeWrapper(this, R.style.AlbumCreationDialog));
 
         alert.setTitle("Are you sure you want to delete album '" + mAlbum.getTitle() + "'?");
 
@@ -224,14 +227,23 @@ public class AlbumPhotoViewActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
             // When the photo is taken successfully, create a copy in external storage, and launch the save photo form activity
-            BitmapUtils.createExternalStoragePublicPicture(AlbumPhotoViewActivity.this, mPhotoFile);
-            savePhoto();
+            Bitmap thumbnailSource = BitmapUtils.decodeSampledBitmapFromResource(mPhotoFile.getAbsolutePath(), 256, 256);
+            File thumbnail = BitmapUtils.createThumbnailInStorage(AlbumPhotoViewActivity.this, thumbnailSource);
+            File photo = BitmapUtils.createExternalStoragePublicPicture(AlbumPhotoViewActivity.this, mPhotoFile);
+
+            // Delete original file stored in the external storage, keep the photo in the shared external storage
+            mPhotoFile.delete();
+            mPhotoFile = photo;
+            savePhoto(thumbnail);
         }
     }
 
-    private void savePhoto() {
+    private void savePhoto(File thumbnail) {
         Intent intent = new Intent(AlbumPhotoViewActivity.this, SavePhotoActivity.class);
         intent.putExtra(SavePhotoActivity.PHOTO_PATH, mPhotoFile.getAbsolutePath());
+        intent.putExtra(SavePhotoActivity.THUMBNAIL_PATH, thumbnail.getAbsolutePath());
+        intent.putExtra(SavePhotoActivity.ALBUM, mAlbum.getId());
+        intent.putExtra(SavePhotoActivity.TYPE, "ADD");
         startActivity(intent);
     }
 }

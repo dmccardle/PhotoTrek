@@ -155,6 +155,7 @@ public class DataManager extends SQLiteOpenHelper {
         cv.put(PhotoSchema.PHOTO_DESCRIPTION_COLUMN, photo.getDescription());
         cv.put(PhotoSchema.PHOTO_DATE_COLUMN, photo.getDate());
         cv.put(PhotoSchema.PHOTO_ALBUM_COLUMN, photo.getAlbumId());
+        cv.put(PhotoSchema.PHOTO_THUMBNAIL_COLUMN, photo.getThumbnailPath());
 
         long result = db.insert(PhotoSchema.PHOTO_TABLE, null, cv);
         Log.i(TAG, "Finished adding photo.");
@@ -203,8 +204,9 @@ public class DataManager extends SQLiteOpenHelper {
             String photoDescription = cursor.getString(4);
             String photoDate = cursor.getString(5);
             int photoAlbum = cursor.getInt(6);
+            String photoThumbnail = cursor.getString(7);
 
-            photos.add(new Photo(photoId, photoPath, photoLatLng, photoDescription, photoDate, photoAlbum));
+            photos.add(new Photo(photoId, photoPath, photoLatLng, photoDescription, photoDate, photoAlbum, photoThumbnail));
         }
         return photos;
     }
@@ -227,6 +229,7 @@ public class DataManager extends SQLiteOpenHelper {
         cv.put(PhotoSchema.PHOTO_DESCRIPTION_COLUMN, photo.getDescription());
         cv.put(PhotoSchema.PHOTO_DATE_COLUMN, photo.getDate());
         cv.put(PhotoSchema.PHOTO_ALBUM_COLUMN, photo.getAlbumId());
+        cv.put(PhotoSchema.PHOTO_THUMBNAIL_COLUMN, photo.getThumbnailPath());
 
         String selection = PhotoSchema._ID + " = " + photo.getId();
 
@@ -257,6 +260,7 @@ public class DataManager extends SQLiteOpenHelper {
         public static final String PHOTO_DESCRIPTION_COLUMN = "PHOTO_DESCRIPTION";
         public static final String PHOTO_DATE_COLUMN = "PHOTO_DATE";
         public static final String PHOTO_ALBUM_COLUMN = "PHOTO_ALBUM";
+        public static final String PHOTO_THUMBNAIL_COLUMN = "PHOTO_THUMBNAIL_COLUMN";
 
         public static final String SQL_CREATE_PHOTO_TABLE =
                 "CREATE TABLE " + PhotoSchema.PHOTO_TABLE + " (" +
@@ -267,6 +271,7 @@ public class DataManager extends SQLiteOpenHelper {
                         PhotoSchema.PHOTO_DESCRIPTION_COLUMN + " TEXT," +
                         PhotoSchema.PHOTO_DATE_COLUMN + " TEXT," +
                         PhotoSchema.PHOTO_ALBUM_COLUMN + " INTEGER," +
+                        PhotoSchema.PHOTO_THUMBNAIL_COLUMN + " TEXT," +
                         " FOREIGN KEY (" + PhotoSchema.PHOTO_ALBUM_COLUMN + ") REFERENCES " + AlbumSchema.ALBUM_TABLE + "(" + AlbumSchema._ID + "))";
 
         public static final String SQL_DELETE_PHOTO_TABLE =
