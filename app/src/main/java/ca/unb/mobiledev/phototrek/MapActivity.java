@@ -75,6 +75,27 @@ public class MapActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+        stopLocationUpdates();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        startLocationUpdates();
+    }
+
+    private void startLocationUpdates() {
+        if(!LocationFinder.getInstance(this).isRequestingLocationRequest())
+            LocationFinder.getInstance(this).startLocationUpdates();
+    }
+
+    private void stopLocationUpdates() {
+        LocationFinder.getInstance(this).stopLocationUpdates();
+    }
+
     // Uses the res/menu/menu_maps.xml resource to populate the actions.
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -104,12 +125,10 @@ public class MapActivity extends AppCompatActivity {
             @Override
             public void onMapReady(GoogleMap googleMap) {
                 mMap = googleMap;
-                Log.d("YOLO WFT", "AFFF");
                 List<Album> albums = dataManager.getAllAlbums();
                 for (Album album : albums) {
                     List<Photo> photos = album.getPhotos();
                     for (int i = 0; i < photos.size(); i++) {
-                        final int position = i;
                         Photo photo = photos.get(i);
                         LatLng marker = photo.getCoordinates();
                         Marker mMarker;
@@ -121,6 +140,8 @@ public class MapActivity extends AppCompatActivity {
                             @Override
                             public boolean onMarkerClick(Marker marker) {
                                 Photo photo = (Photo) marker.getTag();
+                                List<Photo> photos = album.getPhotos();
+                                int position = photos.indexOf(photo);
                                 Intent intent = new Intent(mContext, ViewPhotoActivity.class);
                                 intent.putExtra(ViewPhotoActivity.PHOTO_POSITION, position);
                                 intent.putExtra(ViewPhotoActivity.ALBUMID, photo.getAlbumId());

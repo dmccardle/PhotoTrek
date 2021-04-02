@@ -57,6 +57,8 @@ public class SavePhotoActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        LocationFinder locationFinder = LocationFinder.getInstance(this);
+
         setContentView(R.layout.activity_photo_save);
         setupUI(findViewById(R.id.parent_view_container));
 
@@ -197,22 +199,19 @@ public class SavePhotoActivity extends AppCompatActivity {
             Toast toast = Toast.makeText(this, "Album is required", Toast.LENGTH_LONG);
             toast.show();
         } else {
-            LatLng coordinates = new LatLng(1.0,1.0);
+            LocationFinder locationFinder = LocationFinder.getInstance(this);
+            LatLng coordinates = locationFinder.getLocation();
             String description = mTextDescription.getText().toString();
             String date = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+
             Album album = dataManager.getAllAlbums().get(mSpinnerAlbums.getSelectedItemPosition());
             Photo photo = new Photo(mPhotoPath, coordinates, description, date, album.getId(), mThumbnailPath);
-            getLocationAndSavePhoto(photo);
+            dataManager.addPhoto(photo);
 
             album.setCoverImagePosition(album.getPhotos().size());
             dataManager.updateAlbum(album);
             finish();
         }
-    }
-
-    private void getLocationAndSavePhoto(Photo photo) {
-        LocationFinder locationFinder = new LocationFinder(this, this);
-        locationFinder.setPhotoLocation(photo, dataManager);
     }
 
     private void editPhoto() {

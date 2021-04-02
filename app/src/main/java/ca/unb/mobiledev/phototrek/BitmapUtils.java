@@ -59,7 +59,6 @@ public class BitmapUtils {
         // First decode with inJustDecodeBounds=true to check dimensions
         final BitmapFactory.Options options = new BitmapFactory.Options();
         options.inJustDecodeBounds = true;
-        BitmapFactory.decodeFile(path, options);
 
         // Calculate inSampleSize
         options.inSampleSize = calculateInSampleSize(options, reqWidth, reqHeight);
@@ -67,9 +66,13 @@ public class BitmapUtils {
         // Decode bitmap with inSampleSize set
         options.inJustDecodeBounds = false;
         Bitmap thumbnail = BitmapFactory.decodeFile(path, options);
-        Bitmap rotatedBitmap = thumbnail;
+        Bitmap rotatedBitmap = rotateBitmap(thumbnail, path);
+        Bitmap resized = ThumbnailUtils.extractThumbnail(rotatedBitmap, reqWidth, reqHeight);
+        return resized;
+    }
 
-        // Reorient thumbnail
+    public static Bitmap rotateBitmap(Bitmap bitmap, String path) {
+        Bitmap rotatedBitmap = bitmap;
         ExifInterface ei = null;
         try {
             ei = new ExifInterface(path);
@@ -78,23 +81,22 @@ public class BitmapUtils {
 
             switch (orientation) {
                 case ExifInterface.ORIENTATION_ROTATE_90:
-                    rotatedBitmap = rotateImage(thumbnail, 90);
+                    rotatedBitmap = rotateImage(bitmap, 90);
                     break;
                 case ExifInterface.ORIENTATION_ROTATE_180:
-                    rotatedBitmap = rotateImage(thumbnail, 180);
+                    rotatedBitmap = rotateImage(bitmap, 180);
                     break;
                 case ExifInterface.ORIENTATION_ROTATE_270:
-                    rotatedBitmap = rotateImage(thumbnail, 270);
+                    rotatedBitmap = rotateImage(bitmap, 270);
                     break;
                 case ExifInterface.ORIENTATION_NORMAL:
                 default:
-                    rotatedBitmap = thumbnail;
+                    rotatedBitmap = bitmap;
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
-        Bitmap resized = ThumbnailUtils.extractThumbnail(thumbnail, reqWidth, reqHeight);
-        return resized;
+        return rotatedBitmap;
     }
 
     // Reference: https://stackoverflow.com/questions/14066038/why-does-an-image-captured-using-camera-intent-gets-rotated-on-some-devices-on-a

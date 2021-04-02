@@ -113,7 +113,8 @@ public class FullscreenPhotoActivity extends AppCompatActivity {
         Intent intent = getIntent();
         String mPhotoPath = intent.getStringExtra(PHOTO_PATH);
         Bitmap photo = BitmapFactory.decodeFile(mPhotoPath);
-        mContentView.setImageBitmap(photo);
+        Bitmap rotatedPhoto = BitmapUtils.rotateBitmap(photo, mPhotoPath);
+        mContentView.setImageBitmap(rotatedPhoto);
 
         // Set up the user interaction to manually show or hide the system UI.
         mContentView.setOnClickListener(new View.OnClickListener() {
