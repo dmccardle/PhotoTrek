@@ -1,36 +1,20 @@
 package ca.unb.mobiledev.phototrek;
 
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.view.ContextThemeWrapper;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.google.android.gms.maps.model.LatLng;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-
-import org.w3c.dom.Text;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.List;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -91,7 +75,10 @@ public class ViewPhotoActivity extends AppCompatActivity {
         mDateText.setText(dateString);
         mLocationText.setText(mPhoto.getCoordinates().toString());
         mDescriptionText.setText(mPhoto.getDescription());
-        mPhotoPreview.setImageBitmap(BitmapFactory.decodeFile(mPhoto.getThumbnailPath()));
+
+        // Load image in background
+        SquareBitmapLoader squareBitmapLoader = new SquareBitmapLoader(mPhotoPreview);
+        squareBitmapLoader.execute(mPhoto.getAbsolutePath());
     }
 
     @Override
