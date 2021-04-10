@@ -8,10 +8,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
-
-import android.util.Log;
 
 import android.view.ContextThemeWrapper;
 import android.view.Menu;
@@ -115,10 +112,11 @@ public class SavePhotoActivity extends AppCompatActivity {
                     mSpinnerAlbums.setSelection(i);
             }
         }
-
         mThumbnailPath = intent.getStringExtra(THUMBNAIL_PATH);
-        mThumbnail = BitmapFactory.decodeFile(mThumbnailPath);
-        mPhotoPreview.setImageBitmap(mThumbnail);
+
+        // Load image in background
+        SquareBitmapLoader squareBitmapLoader = new SquareBitmapLoader(mPhotoPreview);
+        squareBitmapLoader.execute(mPhotoPath);
 
         mType = intent.getStringExtra(TYPE);
         if (mType.equals("ADD")) {
