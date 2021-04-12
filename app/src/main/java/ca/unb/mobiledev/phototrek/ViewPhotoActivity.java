@@ -43,7 +43,7 @@ public class ViewPhotoActivity extends AppCompatActivity {
         try {
             setUpPhotoViewActivity();
         } catch (Exception e) {
-            Toast.makeText(this, "Error loading photo.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Error loading photo. Try the refreshing map.", Toast.LENGTH_SHORT).show();
             finish();
         }
     }
