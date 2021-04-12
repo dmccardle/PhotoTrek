@@ -75,6 +75,15 @@ public class AlbumPhotoViewActivity extends AppCompatActivity {
             }
         });
 
+        FloatingActionButton refreshFab = findViewById(R.id.fab_refresh_map);
+        refreshFab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+                startActivity(getIntent());
+            }
+        });
+
         Intent intent = getIntent();
         mAlbumPosition = intent.getIntExtra(ALBUM_POSITION, -1);
         mAlbum = dataManager.getAllAlbums().get(mAlbumPosition);

@@ -69,6 +69,16 @@ public class MapActivity extends AppCompatActivity {
                 dispatchTakePictureIntent();
             }
         });
+
+        FloatingActionButton refreshFab = findViewById(R.id.fab_refresh_map);
+        refreshFab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+                startActivity(getIntent());
+            }
+        });
+
         initializeMap();
 
         int PERMISSION_ALL = 1;

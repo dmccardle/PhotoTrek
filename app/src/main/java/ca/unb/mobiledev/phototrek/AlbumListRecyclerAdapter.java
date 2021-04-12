@@ -39,22 +39,25 @@ public class AlbumListRecyclerAdapter extends RecyclerView.Adapter<AlbumListRecy
         Album album = mAlbums.get(position);
         holder.mTextTitle.setText(album.getTitle());
 
-        int coverImagePosition = album.getCoverImagePosition();
-        if (coverImagePosition == -1) {
+        try {
+            setCoverPhoto(holder, album);
+        } catch (IndexOutOfBoundsException e) {
             holder.mCoverPhoto.setImageResource(R.drawable.ic_empty_album);
-        } else {
-            String photoPath = album.getPhotos().get(coverImagePosition).getAbsolutePath();
-            String thumbnailPath = album.getPhotos().get(coverImagePosition).getThumbnailPath();
-            if (photoPath == null) {
-                holder.mCoverPhoto.setImageResource(R.drawable.ic_empty_album);
-            } else {
-                ImageViewCompat.setImageTintList(holder.mCoverPhoto, null);
-                Bitmap thumbnail = BitmapFactory.decodeFile(thumbnailPath);
-                holder.mCoverPhoto.setImageBitmap(thumbnail);
-            }
         }
 
         holder.mCurrentPosition = position;
+    }
+
+    private void setCoverPhoto(ViewHolder holder, Album album) throws IndexOutOfBoundsException {
+        String photoPath = album.getPhotos().get(album.getCoverImagePosition()).getAbsolutePath();
+        String thumbnailPath = album.getPhotos().get(album.getCoverImagePosition()).getThumbnailPath();
+        if (photoPath == null) {
+            holder.mCoverPhoto.setImageResource(R.drawable.ic_empty_album);
+        } else {
+            ImageViewCompat.setImageTintList(holder.mCoverPhoto, null);
+            Bitmap thumbnail = BitmapFactory.decodeFile(thumbnailPath);
+            holder.mCoverPhoto.setImageBitmap(thumbnail);
+        }
     }
 
     @Override
