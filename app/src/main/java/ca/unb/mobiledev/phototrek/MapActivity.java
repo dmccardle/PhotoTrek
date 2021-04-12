@@ -27,10 +27,12 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.FileProvider;
 
 import android.provider.MediaStore;
+import android.provider.Settings;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
 
 import java.io.File;
 import java.util.List;
@@ -124,52 +126,64 @@ public class MapActivity extends AppCompatActivity {
         mapFragment.getMapAsync(new OnMapReadyCallback() {
             @Override
             public void onMapReady(GoogleMap googleMap) {
-                mMap = googleMap;
-                List<Album> albums = dataManager.getAllAlbums();
-                for (Album album : albums) {
-                    List<Photo> photos = album.getPhotos();
-                    for (int i = 0; i < photos.size(); i++) {
-                        Photo photo = photos.get(i);
-                        LatLng marker = photo.getCoordinates();
-                        Marker mMarker;
-                        mMarker = mMap.addMarker(new MarkerOptions().position(marker).title("Marker in Freddy Beach"));
-                        mMarker.setTag(photo);
-                        mMarker.setPosition(photo.getCoordinates());
-                        mMap.moveCamera(CameraUpdateFactory.newLatLng(marker));
-                        mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
-                            @Override
-                            public boolean onMarkerClick(Marker marker) {
-                                Photo photo = (Photo) marker.getTag();
-                                List<Photo> photos = album.getPhotos();
-                                int position = photos.indexOf(photo);
-                                Intent intent = new Intent(mContext, ViewPhotoActivity.class);
-                                intent.putExtra(ViewPhotoActivity.PHOTO_POSITION, position);
-                                intent.putExtra(ViewPhotoActivity.ALBUMID, photo.getAlbumId());
-                                mContext.startActivity(intent);
-                                return true;
-                            }
-                        });
+                if (LocationFinder.getInstance(MapActivity.this).isLocationEnabled()) {
+                    mMap = googleMap;
+                    List<Album> albums = dataManager.getAllAlbums();
+                    for (Album album : albums) {
+                        List<Photo> photos = album.getPhotos();
+                        for (int i = 0; i < photos.size(); i++) {
+                            Photo photo = photos.get(i);
+                            LatLng marker = photo.getCoordinates();
+                            Marker mMarker;
+                            mMarker = mMap.addMarker(new MarkerOptions().position(marker).title("Marker in Freddy Beach"));
+                            mMarker.setTag(photo);
+                            mMarker.setPosition(photo.getCoordinates());
+                            mMap.moveCamera(CameraUpdateFactory.newLatLng(marker));
+                            mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+                                @Override
+                                public boolean onMarkerClick(Marker marker) {
+                                    Photo photo = (Photo) marker.getTag();
+                                    List<Photo> photos = album.getPhotos();
+                                    int position = photos.indexOf(photo);
+                                    Intent intent = new Intent(mContext, ViewPhotoActivity.class);
+                                    intent.putExtra(ViewPhotoActivity.PHOTO_POSITION, position);
+                                    intent.putExtra(ViewPhotoActivity.ALBUMID, photo.getAlbumId());
+                                    mContext.startActivity(intent);
+                                    return true;
+                                }
+                            });
+                        }
                     }
+                } else {
+                    Toast.makeText(MapActivity.this, "PhotoTrek requires access to your location. Please turn the service on.", Toast.LENGTH_LONG).show();
+                    Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                    startActivity(intent);
                 }
             }
         });
     }
 
     private void dispatchTakePictureIntent() {
-        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        // Ensure that there's a camera activity to handle the intent
-        if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
-            // Create the File where the photo should go. The file will be internal to the application.
-            mPhotoFile = null;
-            mPhotoFile = BitmapUtils.createImageFile(MapActivity.this);
+        if (LocationFinder.getInstance(this).isLocationEnabled()) {
+            Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+            // Ensure that there's a camera activity to handle the intent
+            if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
+                // Create the File where the photo should go. The file will be internal to the application.
+                mPhotoFile = null;
+                mPhotoFile = BitmapUtils.createImageFile(MapActivity.this);
 
-            if (mPhotoFile != null) {
-                Uri photoURI = FileProvider.getUriForFile(this,
-                        "ca.unb.mobiledev.phototrek.provider",
-                        mPhotoFile);
-                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
-                startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
+                if (mPhotoFile != null) {
+                    Uri photoURI = FileProvider.getUriForFile(this,
+                            "ca.unb.mobiledev.phototrek.provider",
+                            mPhotoFile);
+                    takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
+                    startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
+                }
             }
+        } else {
+            Toast.makeText(this, "PhotoTrek requires access to your location. Please turn the service on.", Toast.LENGTH_LONG).show();
+            Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+            startActivity(intent);
         }
     }
 
