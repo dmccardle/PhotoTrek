@@ -9,6 +9,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -39,6 +40,15 @@ public class ViewPhotoActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_photo_view);
 
+        try {
+            setUpPhotoViewActivity();
+        } catch (Exception e) {
+            Toast.makeText(this, "Error loading photo.", Toast.LENGTH_SHORT).show();
+            finish();
+        }
+    }
+
+    private void setUpPhotoViewActivity() throws Exception {
         Intent intent = getIntent();
         mPhotoPosition = intent.getIntExtra(PHOTO_POSITION, 0);
         mAlbumId = intent.getIntExtra(ALBUMID, 0);
