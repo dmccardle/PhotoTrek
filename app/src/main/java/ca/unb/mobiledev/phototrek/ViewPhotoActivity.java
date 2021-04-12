@@ -1,5 +1,6 @@
 package ca.unb.mobiledev.phototrek;
 
+import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -24,6 +25,7 @@ import androidx.appcompat.widget.Toolbar;
 public class ViewPhotoActivity extends AppCompatActivity {
     public static final String PHOTO_POSITION = "ca.unb.mobiledev.phototrek.PHOTO_POSITION";
     public static final String ALBUMID = "ca.unb.mobiledev.phototrek.ALBUMID";
+    public static final int DB_UPDATE = 11;
 
     private TextView mDateText;
     private TextView mLocationText;
@@ -116,7 +118,17 @@ public class ViewPhotoActivity extends AppCompatActivity {
         intent.putExtra(SavePhotoActivity.DESCRIPTION, mPhoto.getDescription());
         intent.putExtra(SavePhotoActivity.PHOTO_POSITION, mPhotoPosition);
         intent.putExtra(SavePhotoActivity.TYPE, "EDIT");
-        startActivity(intent);
+        startActivityForResult(intent, DB_UPDATE);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == DB_UPDATE && resultCode == Activity.RESULT_OK) {
+            String description = data.getStringExtra("description");
+            mPhoto.setDescription(description);
+            mDescriptionText.setText(description);
+        }
     }
 
     private void showDeletePhotoAlert() {

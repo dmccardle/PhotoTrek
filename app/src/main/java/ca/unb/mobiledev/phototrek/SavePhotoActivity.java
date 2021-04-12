@@ -4,6 +4,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -93,6 +94,8 @@ public class SavePhotoActivity extends AppCompatActivity {
         mCancelButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Intent returnIntent = new Intent();
+                setResult(Activity.RESULT_CANCELED, returnIntent);
                 finish();
             }
         });
@@ -208,6 +211,10 @@ public class SavePhotoActivity extends AppCompatActivity {
 
             album.setCoverImagePosition(album.getPhotos().size());
             dataManager.updateAlbum(album);
+
+            Intent returnIntent = new Intent();
+            returnIntent.putExtra("description", description);
+            setResult(Activity.RESULT_OK, returnIntent);
             finish();
         }
     }
@@ -222,7 +229,8 @@ public class SavePhotoActivity extends AppCompatActivity {
             int previousAlbumId = mPhoto.getAlbumId();
 
             mPhoto.setAlbumId(destinationAlbum.getId());
-            mPhoto.setDescription(mTextDescription.getText().toString());
+            String description = mTextDescription.getText().toString();
+            mPhoto.setDescription(description);
             dataManager.updatePhoto(mPhoto);
 
             if (previousAlbumId != mPhoto.getAlbumId()) {
@@ -230,6 +238,9 @@ public class SavePhotoActivity extends AppCompatActivity {
                 updateDestinationAlbumCoverImagePosition(mPhoto.getAlbumId());
             }
 
+            Intent returnIntent = new Intent();
+            returnIntent.putExtra("description", description);
+            setResult(Activity.RESULT_OK, returnIntent);
             finish();
         }
     }
