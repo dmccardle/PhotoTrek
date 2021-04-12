@@ -219,22 +219,31 @@ public class SavePhotoActivity extends AppCompatActivity {
         } else {
             Album destinationAlbum = dataManager.getAllAlbums().get(mSpinnerAlbums.getSelectedItemPosition());
 
+            int previousAlbumId = mPhoto.getAlbumId();
+
             mPhoto.setAlbumId(destinationAlbum.getId());
             mPhoto.setDescription(mTextDescription.getText().toString());
             dataManager.updatePhoto(mPhoto);
 
-            // Photo was moved to a different album. Update cover image.
-            if (originalAlbum != destinationAlbum) {
-                int destinationAlbumSize = dataManager.getAlbumById(destinationAlbum.getId()).getPhotos().size();
-                int originalAlbumSize = dataManager.getAlbumById(originalAlbum.getId()).getPhotos().size();
-                destinationAlbum.setCoverImagePosition(destinationAlbumSize - 1);
-                originalAlbum.setCoverImagePosition(originalAlbumSize - 1);
-                dataManager.updateAlbum(destinationAlbum);
-                dataManager.updateAlbum(originalAlbum);
+            if (previousAlbumId != mPhoto.getAlbumId()) {
+                updatePreviousAlbumCoverImagePosition(previousAlbumId);
+                updateDestinationAlbumCoverImagePosition(mPhoto.getAlbumId());
             }
 
             finish();
         }
+    }
+
+    private void updatePreviousAlbumCoverImagePosition(int previousAlbumId) {
+        Album previousAlbum = dataManager.getAlbumById(previousAlbumId);
+        previousAlbum.setCoverImagePosition(previousAlbum.getCoverImagePosition() - 1);
+        dataManager.updateAlbum(previousAlbum);
+    }
+
+    private void updateDestinationAlbumCoverImagePosition(int destinationAlbumId) {
+        Album destinationAlbum = dataManager.getAlbumById(destinationAlbumId);
+        destinationAlbum.setCoverImagePosition(destinationAlbum.getCoverImagePosition() + 1);
+        dataManager.updateAlbum(destinationAlbum);
     }
 
     private void hideKeyboard() {

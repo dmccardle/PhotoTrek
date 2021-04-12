@@ -20,7 +20,7 @@ public class DataManager extends SQLiteOpenHelper {
     private final String TAG = "DataManager";
 
     public DataManager(@Nullable Context context) {
-        super(context, "database.db", null, 3);
+        super(context, "database.db", null, 8);
     }
 
     @Override
@@ -215,8 +215,16 @@ public class DataManager extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
         String selection = PhotoSchema._ID + " = " + photo.getId();
 
+        updateAlbumCoverImagePosition(photo.getAlbumId());
+
         int count = db.delete(PhotoSchema.PHOTO_TABLE, selection, null);
         return count == 1;
+    }
+
+    private void updateAlbumCoverImagePosition(int albumId) {
+        Album album = getAlbumById(albumId);
+        album.setCoverImagePosition(album.getCoverImagePosition() - 1);
+        updateAlbum(album);
     }
 
     public boolean updatePhoto(Photo photo) {
